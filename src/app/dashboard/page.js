@@ -167,7 +167,7 @@ export default function Dashboard() {
             <div className="text-sm">
               <Link
                 href="/invoices?status=pending"
-                className="font-medium text-indigo-700 hover:text-indigo-900"
+                className="font-medium text-indigo-700 hover:text-indigo-900 cursor-pointer transition-colors duration-200"
               >
                 View all
               </Link>
@@ -198,7 +198,7 @@ export default function Dashboard() {
             <div className="text-sm">
               <Link
                 href="/frames?lowStock=true"
-                className="font-medium text-orange-700 hover:text-orange-900"
+                className="font-medium text-orange-700 hover:text-orange-900 cursor-pointer transition-colors duration-200"
               >
                 View items
               </Link>
@@ -229,7 +229,7 @@ export default function Dashboard() {
             <div className="text-sm">
               <Link
                 href="/invoices/create"
-                className="font-medium text-indigo-700 hover:text-indigo-900"
+                className="font-medium text-indigo-700 hover:text-indigo-900 cursor-pointer transition-colors duration-200"
               >
                 Get started
               </Link>
@@ -286,7 +286,7 @@ export default function Dashboard() {
             <div className="mt-4">
               <Link
                 href="/invoices"
-                className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                className="text-sm font-medium text-indigo-600 hover:text-indigo-500 cursor-pointer transition-colors duration-200"
               >
                 View all invoices →
               </Link>
@@ -329,7 +329,7 @@ export default function Dashboard() {
             <div className="mt-4">
               <Link
                 href="/frames"
-                className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                className="text-sm font-medium text-indigo-600 hover:text-indigo-500 cursor-pointer transition-colors duration-200"
               >
                 Manage inventory →
               </Link>

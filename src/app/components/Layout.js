@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "./AuthProvider";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   HomeIcon,
   DocumentTextIcon,
@@ -33,7 +33,6 @@ const adminNavigation = [
 export default function Layout({ children }) {
   const { user, logout } = useAuth();
   const pathname = usePathname();
-  const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   if (!user) {
@@ -68,7 +67,7 @@ export default function Layout({ children }) {
           <div className="absolute top-0 right-0 -mr-12 pt-2">
             <button
               type="button"
-              className="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+              className="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white cursor-pointer hover:bg-indigo-600"
               onClick={() => setSidebarOpen(false)}
             >
               <span className="sr-only">Close sidebar</span>
@@ -90,10 +89,10 @@ export default function Layout({ children }) {
                   <Link
                     key={item.name}
                     href={item.href}
-                    className={`group flex items-center px-2 py-2 text-base font-medium rounded-md ${
+                    className={`group flex items-center px-2 py-2 text-base font-medium rounded-md cursor-pointer transition-colors duration-200 ${
                       isActive
                         ? "bg-indigo-800 text-white"
-                        : "text-indigo-100 hover:bg-indigo-600"
+                        : "text-indigo-100 hover:bg-indigo-600 hover:text-white"
                     }`}
                     onClick={() => setSidebarOpen(false)}
                   >
@@ -127,10 +126,10 @@ export default function Layout({ children }) {
                     <Link
                       key={item.name}
                       href={item.href}
-                      className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
+                      className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md cursor-pointer transition-colors duration-200 ${
                         isActive
                           ? "bg-indigo-800 text-white"
-                          : "text-indigo-100 hover:bg-indigo-600"
+                          : "text-indigo-100 hover:bg-indigo-600 hover:text-white"
                       }`}
                     >
                       <item.icon className="mr-3 h-6 w-6 text-indigo-300" />
@@ -150,7 +149,7 @@ export default function Layout({ children }) {
         <div className="relative z-10 shrink-0 flex h-16 bg-white shadow">
           <button
             type="button"
-            className="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden"
+            className="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden cursor-pointer hover:bg-gray-50"
             onClick={() => setSidebarOpen(true)}
           >
             <span className="sr-only">Open sidebar</span>
@@ -176,7 +175,7 @@ export default function Layout({ children }) {
               </span>
               <button
                 onClick={logout}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded-md text-sm font-medium"
+                className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded-md text-sm font-medium cursor-pointer transition-colors duration-200"
               >
                 Sign Out
               </button>

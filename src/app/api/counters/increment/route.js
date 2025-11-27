@@ -4,7 +4,7 @@ import {
   getNextSequence,
   generateInvoiceNumber,
   generateReceiptNumber,
-} from "../../../../../lib/utils";
+} from "../../../../../lib/server-utils";
 
 export async function POST(request) {
   const user = await requireAuth(request);

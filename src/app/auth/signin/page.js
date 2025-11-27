@@ -56,7 +56,7 @@ export default function SignIn() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-600 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Email address"
               />
             </div>
@@ -72,12 +72,12 @@ export default function SignIn() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 pr-10 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 pr-10 border border-gray-300 placeholder-gray-600 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
               />
               <button
                 type="button"
-                className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer hover:opacity-75"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? (
@@ -99,7 +99,7 @@ export default function SignIn() {
             <button
               type="submit"
               disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-colors duration-200"
             >
               {loading ? "Signing in..." : "Sign in"}
             </button>
@@ -113,6 +113,50 @@ export default function SignIn() {
             <p>
               <strong>Staff:</strong> staff@shine.com / staff123
             </p>
+          </div>
+
+          <div className="mt-4 text-center">
+            <button
+              type="button"
+              onClick={async () => {
+                try {
+                  console.log("Attempting to seed users...");
+                  const response = await fetch("/api/seed/users", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                  });
+
+                  console.log("Response status:", response.status);
+                  console.log("Response headers:", response.headers);
+
+                  if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error("Error response:", errorText);
+                    alert(
+                      "Failed to seed users. Check console for details. Status: " +
+                        response.status
+                    );
+                    return;
+                  }
+
+                  const data = await response.json();
+                  console.log("Success response:", data);
+                  alert(data.message || "Users seeded successfully!");
+                } catch (error) {
+                  console.error("Fetch error:", error);
+                  alert(
+                    "Failed to seed users: " +
+                      error.message +
+                      ". Check console for details."
+                  );
+                }
+              }}
+              className="text-sm text-indigo-600 hover:text-indigo-500 underline cursor-pointer"
+            >
+              First time? Click here to create demo users
+            </button>
           </div>
         </form>
       </div>

@@ -7,7 +7,7 @@ import {
   getNextSequence,
   generateReceiptNumber,
   calculatePaymentStatus,
-} from "../../../../lib/utils";
+} from "../../../../lib/server-utils";
 import { requireAuth } from "../../../../lib/auth";
 
 export async function GET(request) {
@@ -59,7 +59,7 @@ export async function POST(request) {
     const body = await request.json();
     let createdPayment;
 
-    const result = await session_db.withTransaction(async () => {
+    await session_db.withTransaction(async () => {
       const { invoiceId, amount, method, paymentType, note } = body;
 
       if (!invoiceId || !amount || amount <= 0 || !method || !paymentType) {

@@ -8,14 +8,17 @@ import {
   getNextSequence,
   generateInvoiceNumber,
   calculatePaymentStatus,
-} from "../../../../lib/utils";
+} from "../../../../lib/server-utils";
 import { requireAuth } from "../../../../lib/auth";
 
 export async function GET(request) {
+  console.log("📋 GET /api/invoices - Request received");
+
   const user = await requireAuth(request);
   if (user instanceof NextResponse) return user;
 
   await dbConnect();
+  console.log("📊 Database connected for invoices list");
 
   try {
     const { searchParams } = new URL(request.url);
@@ -46,6 +49,8 @@ export async function GET(request) {
       .limit(parseInt(limit));
 
     const total = await Invoice.countDocuments(query);
+
+    console.log(`📋 Found ${invoices.length} invoices out of ${total} total`);
 
     return NextResponse.json({
       invoices,
