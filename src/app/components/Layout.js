@@ -10,7 +10,7 @@ import {
   CreditCardIcon,
   ChartBarIcon,
   UserGroupIcon,
-  KeyIcon,
+  UserIcon,
   Bars3Icon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
@@ -22,7 +22,7 @@ const navigation = [
   { name: "Inventory", href: "/frames", icon: CubeIcon },
   { name: "Bookings", href: "/bookings", icon: CalendarIcon },
   { name: "Payments", href: "/payments", icon: CreditCardIcon },
-  { name: "Change Password", href: "/change-password", icon: KeyIcon },
+  { name: "Profile", href: "/profile", icon: UserIcon },
 ];
 
 const adminNavigation = [
@@ -45,7 +45,7 @@ export default function Layout({ children }) {
     : navigation;
 
   return (
-    <div className="h-screen flex overflow-hidden bg-gray-100">
+    <div className="h-screen flex overflow-hidden bg-gray-100 dark:bg-gray-900">
       {/* Mobile sidebar */}
       <div
         className={`fixed inset-0 flex z-40 md:hidden ${
@@ -60,7 +60,7 @@ export default function Layout({ children }) {
         />
 
         <div
-          className={`relative flex-1 flex flex-col max-w-xs w-full bg-indigo-700 transition ease-in-out duration-300 transform ${
+          className={`relative flex-1 flex flex-col max-w-xs w-full bg-indigo-700 dark:bg-indigo-800 transition ease-in-out duration-300 transform ${
             sidebarOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
@@ -77,9 +77,7 @@ export default function Layout({ children }) {
 
           <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
             <div className="shrink-0 flex items-center px-4">
-              <h1 className="text-white text-lg font-semibold">
-                Shine Art POS
-              </h1>
+              <h1 className="text-white text-lg font-bold">Studio POS</h1>
             </div>
             <nav className="mt-5 px-2 space-y-1">
               {allNavigation.map((item) => {
@@ -111,12 +109,10 @@ export default function Layout({ children }) {
       {/* Desktop sidebar */}
       <div className="hidden md:flex md:shrink-0">
         <div className="flex flex-col w-64">
-          <div className="flex flex-col h-0 flex-1 bg-indigo-700">
+          <div className="flex flex-col h-0 flex-1 bg-indigo-700 dark:bg-indigo-800">
             <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
               <div className="flex items-center shrink-0 px-4">
-                <h1 className="text-white text-xl font-semibold">
-                  Shine Art POS
-                </h1>
+                <h1 className="text-white text-xl font-bold">Studio POS</h1>
               </div>
               <nav className="mt-5 flex-1 px-2 space-y-1">
                 {allNavigation.map((item) => {
@@ -146,10 +142,10 @@ export default function Layout({ children }) {
       {/* Main content */}
       <div className="flex flex-col w-0 flex-1 overflow-hidden">
         {/* Top bar */}
-        <div className="relative z-10 shrink-0 flex h-16 bg-white shadow">
+        <div className="relative z-10 shrink-0 flex h-16 bg-white dark:bg-gray-800 shadow">
           <button
             type="button"
-            className="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden cursor-pointer hover:bg-gray-50"
+            className="px-4 border-r border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700"
             onClick={() => setSidebarOpen(true)}
           >
             <span className="sr-only">Open sidebar</span>
@@ -161,7 +157,7 @@ export default function Layout({ children }) {
               <div className="w-full flex md:ml-0">
                 <div className="relative w-full text-gray-400 focus-within:text-gray-600">
                   <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none">
-                    <span className="text-sm font-medium text-gray-900">
+                    <span className="text-sm font-medium text-gray-900 dark:text-white">
                       Welcome, {user.name}
                     </span>
                   </div>
@@ -170,7 +166,7 @@ export default function Layout({ children }) {
             </div>
 
             <div className="ml-4 flex items-center md:ml-6">
-              <span className="text-sm text-gray-500 mr-4">
+              <span className="text-sm text-gray-500 dark:text-gray-400 mr-4">
                 {isAdmin ? "Admin" : "Staff"}
               </span>
               <button

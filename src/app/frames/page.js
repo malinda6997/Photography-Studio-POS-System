@@ -174,7 +174,7 @@ export default function FramesPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-8">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
                 Frame Inventory
               </h1>
               <p className="mt-1 text-sm text-gray-600">
@@ -191,7 +191,7 @@ export default function FramesPage() {
           </div>
 
           {/* Filters */}
-          <div className="bg-white p-6 rounded-lg shadow mb-6">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow mb-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="relative">
                 <MagnifyingGlassIcon className="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -242,7 +242,7 @@ export default function FramesPage() {
               <p className="mt-4 text-gray-600">Loading frames...</p>
             </div>
           ) : filteredFrames.length === 0 ? (
-            <div className="text-center py-12 bg-white rounded-lg shadow">
+            <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-lg shadow">
               <PhotoIcon className="h-12 w-12 text-gray-400 mx-auto" />
               <p className="mt-4 text-gray-600">No frames found</p>
               <button
@@ -259,12 +259,12 @@ export default function FramesPage() {
                 return (
                   <div
                     key={frame._id}
-                    className="bg-white rounded-lg shadow hover:shadow-md transition-shadow"
+                    className="bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-md transition-shadow"
                   >
                     <div className="p-6">
                       <div className="flex justify-between items-start mb-4">
                         <div className="flex-1">
-                          <h3 className="text-lg font-semibold text-gray-900">
+                          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                             {frame.name}
                           </h3>
                           <p className="text-sm text-gray-600 capitalize">
@@ -351,7 +351,7 @@ export default function FramesPage() {
                         </div>
 
                         {frame.description && (
-                          <div className="mt-3 pt-3 border-t border-gray-200">
+                          <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-600">
                             <p className="text-sm text-gray-600">
                               {frame.description}
                             </p>
@@ -368,7 +368,7 @@ export default function FramesPage() {
           {/* Form Modal */}
           {showForm && (
             <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-              <div className="relative top-20 mx-auto p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white">
+              <div className="relative top-20 mx-auto p-5 border border-gray-200 dark:border-gray-600 w-11/12 max-w-2xl shadow-lg rounded-md bg-white dark:bg-gray-800">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-lg font-medium">
                     {editingFrame ? "Edit Frame" : "Add New Frame"}
@@ -581,7 +581,7 @@ export default function FramesPage() {
                     />
                     <label
                       htmlFor="isActive"
-                      className="ml-2 block text-sm text-gray-900"
+                      className="ml-2 block text-sm text-gray-900 dark:text-white"
                     >
                       Active (available for sale)
                     </label>

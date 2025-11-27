@@ -86,7 +86,9 @@ export default function InvoicesPage() {
           {/* Header */}
           <div className="flex justify-between items-center mb-8">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Invoices</h1>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                Invoices
+              </h1>
               <p className="mt-1 text-sm text-gray-600">
                 Manage and track all customer invoices
               </p>
@@ -101,10 +103,10 @@ export default function InvoicesPage() {
           </div>
 
           {/* Filters */}
-          <div className="bg-white p-6 rounded-lg shadow mb-6">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow mb-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Search Invoices
                 </label>
                 <div className="relative">
@@ -149,7 +151,7 @@ export default function InvoicesPage() {
           </div>
 
           {/* Invoices Table */}
-          <div className="bg-white shadow rounded-lg overflow-hidden">
+          <div className="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
@@ -174,14 +176,14 @@ export default function InvoicesPage() {
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-600">
                   {invoices.length > 0 ? (
                     invoices.map((invoice) => (
                       <tr key={invoice._id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
                             <DocumentTextIcon className="h-5 w-5 text-gray-400 mr-2" />
-                            <div className="text-sm font-medium text-gray-900">
+                            <div className="text-sm font-medium text-gray-900 dark:text-white">
                               {invoice.invoiceNo}
                             </div>
                           </div>
@@ -233,7 +235,7 @@ export default function InvoicesPage() {
                     <tr>
                       <td colSpan="6" className="px-6 py-12 text-center">
                         <DocumentTextIcon className="mx-auto h-12 w-12 text-gray-400" />
-                        <h3 className="mt-2 text-sm font-medium text-gray-900">
+                        <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white">
                           No invoices found
                         </h3>
                         <p className="mt-1 text-sm text-gray-500">
@@ -257,7 +259,7 @@ export default function InvoicesPage() {
 
             {/* Pagination */}
             {pagination.pages > 1 && (
-              <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+              <div className="bg-white dark:bg-gray-800 px-4 py-3 flex items-center justify-between border-t border-gray-200 dark:border-gray-600 sm:px-6">
                 <div className="flex-1 flex justify-between sm:hidden">
                   <button
                     onClick={() =>
@@ -267,7 +269,7 @@ export default function InvoicesPage() {
                       }))
                     }
                     disabled={pagination.current === 1}
-                    className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+                    className="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50"
                   >
                     Previous
                   </button>
@@ -279,14 +281,14 @@ export default function InvoicesPage() {
                       }))
                     }
                     disabled={pagination.current === pagination.pages}
-                    className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+                    className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50"
                   >
                     Next
                   </button>
                 </div>
                 <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                   <div>
-                    <p className="text-sm text-gray-700">
+                    <p className="text-sm text-gray-700 dark:text-gray-300">
                       Showing page{" "}
                       <span className="font-medium">{pagination.current}</span>{" "}
                       of <span className="font-medium">{pagination.pages}</span>{" "}
@@ -303,7 +305,7 @@ export default function InvoicesPage() {
                           }))
                         }
                         disabled={pagination.current === 1}
-                        className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+                        className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50"
                       >
                         Previous
                       </button>
@@ -315,7 +317,7 @@ export default function InvoicesPage() {
                           }))
                         }
                         disabled={pagination.current === pagination.pages}
-                        className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+                        className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50"
                       >
                         Next
                       </button>

@@ -102,7 +102,7 @@ export default function ReportsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-8">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
                 Reports & Analytics
               </h1>
               <p className="mt-1 text-sm text-gray-600">
@@ -119,7 +119,7 @@ export default function ReportsPage() {
           </div>
 
           {/* Date Range Filter */}
-          <div className="bg-white p-6 rounded-lg shadow mb-6">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow mb-6">
             <div className="flex items-center space-x-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -171,7 +171,7 @@ export default function ReportsPage() {
             <>
               {/* Key Metrics */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div className="bg-white p-6 rounded-lg shadow">
+                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
                   <div className="flex items-center">
                     <BanknotesIcon className="h-8 w-8 text-green-500" />
                     <div className="ml-4">
@@ -185,14 +185,14 @@ export default function ReportsPage() {
                   </div>
                 </div>
 
-                <div className="bg-white p-6 rounded-lg shadow">
+                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
                   <div className="flex items-center">
                     <DocumentTextIcon className="h-8 w-8 text-blue-500" />
                     <div className="ml-4">
                       <p className="text-sm font-medium text-gray-600">
                         Invoices
                       </p>
-                      <p className="text-2xl font-bold text-gray-900">
+                      <p className="text-2xl font-bold text-gray-900 dark:text-white">
                         {reportData.totalInvoices}
                       </p>
                       <p className="text-xs text-gray-500">
@@ -204,28 +204,28 @@ export default function ReportsPage() {
                   </div>
                 </div>
 
-                <div className="bg-white p-6 rounded-lg shadow">
+                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
                   <div className="flex items-center">
                     <UserGroupIcon className="h-8 w-8 text-purple-500" />
                     <div className="ml-4">
                       <p className="text-sm font-medium text-gray-600">
                         Customers
                       </p>
-                      <p className="text-2xl font-bold text-gray-900">
+                      <p className="text-2xl font-bold text-gray-900 dark:text-white">
                         {reportData.totalCustomers}
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-white p-6 rounded-lg shadow">
+                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
                   <div className="flex items-center">
                     <CalendarIcon className="h-8 w-8 text-orange-500" />
                     <div className="ml-4">
                       <p className="text-sm font-medium text-gray-600">
                         Bookings
                       </p>
-                      <p className="text-2xl font-bold text-gray-900">
+                      <p className="text-2xl font-bold text-gray-900 dark:text-white">
                         {reportData.totalBookings}
                       </p>
                       <p className="text-xs text-gray-500">
@@ -239,8 +239,8 @@ export default function ReportsPage() {
               {/* Charts and Details */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                 {/* Revenue Trend */}
-                <div className="bg-white p-6 rounded-lg shadow">
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">
+                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
                     Monthly Revenue Trend
                   </h3>
                   {reportData.monthlyRevenue.length > 0 ? (
@@ -271,7 +271,7 @@ export default function ReportsPage() {
                               ></div>
                             </div>
                           </div>
-                          <span className="text-sm font-medium text-gray-900">
+                          <span className="text-sm font-medium text-gray-900 dark:text-white">
                             {formatCurrency(month.revenue)}
                           </span>
                         </div>
@@ -285,8 +285,8 @@ export default function ReportsPage() {
                 </div>
 
                 {/* Top Services */}
-                <div className="bg-white p-6 rounded-lg shadow">
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">
+                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
                     Top Services
                   </h3>
                   {reportData.topServices.length > 0 ? (
@@ -297,7 +297,7 @@ export default function ReportsPage() {
                           className="flex items-center justify-between"
                         >
                           <div className="flex items-center">
-                            <span className="text-sm font-medium text-gray-900 mr-2">
+                            <span className="text-sm font-medium text-gray-900 dark:text-white mr-2">
                               #{index + 1}
                             </span>
                             <span className="text-sm text-gray-600 capitalize">
@@ -308,7 +308,7 @@ export default function ReportsPage() {
                             <span className="text-sm text-gray-500">
                               {service.count} bookings
                             </span>
-                            <span className="text-sm font-medium text-gray-900">
+                            <span className="text-sm font-medium text-gray-900 dark:text-white">
                               {formatCurrency(service.revenue)}
                             </span>
                           </div>
@@ -324,9 +324,9 @@ export default function ReportsPage() {
               </div>
 
               {/* Recent Payments */}
-              <div className="bg-white rounded-lg shadow">
-                <div className="px-6 py-4 border-b border-gray-200">
-                  <h3 className="text-lg font-medium text-gray-900">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
+                <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-600">
+                  <h3 className="text-lg font-medium text-gray-900 dark:text-white">
                     Recent Payments
                   </h3>
                 </div>
@@ -335,7 +335,7 @@ export default function ReportsPage() {
                     <div className="overflow-x-auto">
                       <table className="min-w-full">
                         <thead>
-                          <tr className="border-b border-gray-200">
+                          <tr className="border-b border-gray-200 dark:border-gray-600">
                             <th className="text-left py-2 text-sm font-medium text-gray-600">
                               Date
                             </th>
@@ -356,7 +356,7 @@ export default function ReportsPage() {
                         <tbody className="divide-y divide-gray-200">
                           {reportData.recentPayments.map((payment) => (
                             <tr key={payment._id}>
-                              <td className="py-3 text-sm text-gray-900">
+                              <td className="py-3 text-sm text-gray-900 dark:text-gray-300">
                                 {formatDate(payment.createdAt)}
                               </td>
                               <td className="py-3 text-sm text-gray-600">
@@ -368,7 +368,7 @@ export default function ReportsPage() {
                               <td className="py-3 text-sm text-gray-600 capitalize">
                                 {payment.method.replace("_", " ")}
                               </td>
-                              <td className="py-3 text-sm font-medium text-gray-900 text-right">
+                              <td className="py-3 text-sm font-medium text-gray-900 dark:text-white text-right">
                                 {formatCurrency(payment.amount)}
                               </td>
                             </tr>

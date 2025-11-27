@@ -244,7 +244,9 @@ export default function BookingsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-8">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Bookings</h1>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                Bookings
+              </h1>
               <p className="mt-1 text-sm text-gray-600">
                 Manage photography session appointments
               </p>
@@ -259,7 +261,7 @@ export default function BookingsPage() {
           </div>
 
           {/* Filters */}
-          <div className="bg-white p-6 rounded-lg shadow mb-6">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow mb-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="relative">
                 <MagnifyingGlassIcon className="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -306,7 +308,7 @@ export default function BookingsPage() {
               <p className="mt-4 text-gray-600">Loading bookings...</p>
             </div>
           ) : filteredBookings.length === 0 ? (
-            <div className="text-center py-12 bg-white rounded-lg shadow">
+            <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-lg shadow">
               <CalendarIcon className="h-12 w-12 text-gray-400 mx-auto" />
               <p className="mt-4 text-gray-600">No bookings found</p>
               <button
@@ -317,7 +319,7 @@ export default function BookingsPage() {
               </button>
             </div>
           ) : (
-            <div className="bg-white shadow overflow-hidden sm:rounded-md">
+            <div className="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-md">
               <ul className="divide-y divide-gray-200">
                 {filteredBookings.map((booking) => (
                   <li key={booking._id}>
@@ -327,7 +329,7 @@ export default function BookingsPage() {
                           <UserIcon className="h-10 w-10 text-gray-400" />
                           <div className="ml-4">
                             <div className="flex items-center">
-                              <p className="text-sm font-medium text-gray-900">
+                              <p className="text-sm font-medium text-gray-900 dark:text-white">
                                 {booking.customerName}
                               </p>
                               <span
@@ -400,7 +402,7 @@ export default function BookingsPage() {
           {/* Form Modal */}
           {showForm && (
             <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-              <div className="relative top-20 mx-auto p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white">
+              <div className="relative top-20 mx-auto p-5 border border-gray-200 dark:border-gray-600 w-11/12 max-w-2xl shadow-lg rounded-md bg-white dark:bg-gray-800">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-lg font-medium">
                     {editingBooking ? "Edit Booking" : "New Booking"}

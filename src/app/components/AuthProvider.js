@@ -6,6 +6,7 @@ const AuthContext = createContext({
   loading: true,
   login: () => {},
   logout: () => {},
+  refreshUser: () => {},
 });
 
 export function AuthProvider({ children }) {
@@ -85,8 +86,27 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const refreshUser = async () => {
+    try {
+      console.log("AuthProvider - Refreshing user data...");
+      const response = await fetch("/api/auth/session");
+      if (response.ok) {
+        const data = await response.json();
+        console.log("AuthProvider - Fresh user data:", data.user);
+        setUser(data.user);
+      } else {
+        console.log(
+          "AuthProvider - Refresh failed with status:",
+          response.status
+        );
+      }
+    } catch (error) {
+      console.error("User refresh failed:", error);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, logout, loading, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );
