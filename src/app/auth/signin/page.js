@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
+import "./animations.css";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -51,36 +52,23 @@ export default function SignIn() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
-      {/* Background decoration */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-400 to-indigo-600 rounded-full opacity-10"></div>
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-purple-400 to-pink-600 rounded-full opacity-10"></div>
-      </div>
-
-      {/* Main login card */}
-      <div className="relative w-full max-w-md">
-        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-8">
-          {/* Logo section */}
-          <div className="text-center mb-8">
-            <div className="mx-auto w-24 h-24 mb-4 relative">
+    <div className="min-h-screen bg-white">
+      <div className="flex flex-col items-center justify-center min-h-screen p-4">
+        <div className="w-full max-w-md mx-auto">
+          {/* Logo section - Clean and Simple */}
+          <div className="text-center mb-2">
+            <div className="mx-auto w-64 h-64 relative">
               <Image
                 src="/logo.png"
-                alt="Shine Art Studio Logo"
+                alt="Logo"
                 fill
-                className="object-contain rounded-xl"
+                className="object-contain"
                 priority
               />
             </div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-              Shine Art Studio
-            </h1>
-            <p className="text-gray-600 mt-2">
-              Professional Photography Management
-            </p>
           </div>
 
-          {/* Login form */}
+          {/* Login form - Clean and Simple */}
           <form onSubmit={handleLogin} className="space-y-6">
             {/* Email field */}
             <div>
@@ -96,7 +84,7 @@ export default function SignIn() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors bg-white/50"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors bg-white"
                 placeholder="Enter your email"
               />
             </div>
@@ -116,7 +104,7 @@ export default function SignIn() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors bg-white/50"
+                  className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors bg-white"
                   placeholder="Enter your password"
                 />
                 <button
@@ -207,7 +195,8 @@ export default function SignIn() {
             <button
               type="submit"
               disabled={loading || !email || !password}
-              className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-4 rounded-lg font-medium hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105"
+              className="w-full text-white py-3 px-4 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{ backgroundColor: "#5D0CE8", focusRingColor: "#5D0CE8" }}
             >
               {loading ? (
                 <div className="flex items-center justify-center">
@@ -237,38 +226,19 @@ export default function SignIn() {
                 "Sign In"
               )}
             </button>
-
-            {/* Demo credentials */}
-            <div className="bg-gray-50 rounded-lg p-4 text-center">
-              <p className="text-sm text-gray-600 mb-3">Demo Credentials:</p>
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setEmail("admin@shine.com");
-                    setPassword("admin123");
-                  }}
-                  className="px-3 py-2 text-xs bg-indigo-100 text-indigo-700 rounded-md hover:bg-indigo-200 transition-colors"
-                >
-                  👨‍💼 Admin Login
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setEmail("staff@shine.com");
-                    setPassword("staff123");
-                  }}
-                  className="px-3 py-2 text-xs bg-purple-100 text-purple-700 rounded-md hover:bg-purple-200 transition-colors"
-                >
-                  👥 Staff Login
-                </button>
-              </div>
-            </div>
           </form>
 
-          {/* Footer */}
-          <div className="mt-8 text-center text-xs text-gray-500">
-            © 2025 Shine Art Studio. All rights reserved.
+          {/* Professional Footer with Developer Credit */}
+          <div className="mt-8 text-center space-y-2">
+            <div className="text-xs text-gray-600 font-medium">
+              Developed by{" "}
+              <span className="text-indigo-600 font-semibold">
+                Malinda Prabath
+              </span>
+            </div>
+            <div className="text-xs text-gray-500">
+              © 2025 Photography Studio Management System. All rights reserved.
+            </div>
           </div>
         </div>
       </div>
