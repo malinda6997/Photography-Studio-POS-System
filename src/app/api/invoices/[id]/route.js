@@ -5,7 +5,7 @@ import { requireAuth } from "../../../../../lib/auth";
 
 export async function GET(request, { params }) {
   console.log(`🔍 GET /api/invoices/${params.id} - Request received`);
-  
+
   const user = await requireAuth(request);
   if (user instanceof NextResponse) return user;
 
