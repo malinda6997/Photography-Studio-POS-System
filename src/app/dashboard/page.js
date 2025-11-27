@@ -9,8 +9,10 @@ import {
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
 
+import Layout from "../components/Layout";
+
 export default function Dashboard() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [dashboardData, setDashboardData] = useState({
     todayIncome: 0,
     pendingInvoices: 0,
@@ -71,6 +73,18 @@ export default function Dashboard() {
     fetchDashboardData();
   }, [fetchDashboardData]);
 
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-600"></div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null; // Will be redirected by middleware
+  }
+
   if (loading) {
     return (
       <div className="animate-pulse">
@@ -89,12 +103,10 @@ export default function Dashboard() {
   const isAdmin = user?.role === "admin";
 
   return (
-    <div>
+    <Layout>
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
-        <p className="mt-1 text-sm text-gray-600">
-          Welcome back, {session?.user?.name}
-        </p>
+        <p className="mt-1 text-sm text-gray-600">Welcome back, {user?.name}</p>
       </div>
 
       {/* Stats Grid */}
@@ -325,6 +337,6 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-    </div>
+    </Layout>
   );
 }

@@ -1,7 +1,12 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
 
-const AuthContext = createContext({});
+const AuthContext = createContext({
+  user: null,
+  loading: true,
+  login: () => {},
+  logout: () => {},
+});
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);

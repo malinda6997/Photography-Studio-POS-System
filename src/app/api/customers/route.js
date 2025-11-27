@@ -1,14 +1,11 @@
-import { getServerSession } from "next-auth";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import dbConnect from "../../../../../lib/dbConnect";
 import Customer from "../../../../../models/Customer";
+import { requireAuth } from "../../../../../lib/auth";
 
 export async function GET(request) {
-  const session = await getServerSession();
-
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const user = await requireAuth(request);
+  if (user instanceof NextResponse) return user;
 
   await dbConnect();
 
@@ -39,11 +36,8 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
-  const session = await getServerSession();
-
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const user = await requireAuth(request);
+  if (user instanceof NextResponse) return user;
 
   await dbConnect();
 

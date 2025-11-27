@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useSession, signOut } from "next-auth/react";
+import { useAuth } from "./AuthProvider";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { usePathname, useRouter } from "next/navigation";
 import {
   HomeIcon,
   DocumentTextIcon,
@@ -10,6 +10,7 @@ import {
   CreditCardIcon,
   ChartBarIcon,
   UserGroupIcon,
+  KeyIcon,
   Bars3Icon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
@@ -21,6 +22,7 @@ const navigation = [
   { name: "Inventory", href: "/frames", icon: CubeIcon },
   { name: "Bookings", href: "/bookings", icon: CalendarIcon },
   { name: "Payments", href: "/payments", icon: CreditCardIcon },
+  { name: "Change Password", href: "/change-password", icon: KeyIcon },
 ];
 
 const adminNavigation = [
@@ -29,15 +31,16 @@ const adminNavigation = [
 ];
 
 export default function Layout({ children }) {
-  const { data: session } = useSession();
+  const { user, logout } = useAuth();
+  const pathname = usePathname();
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  if (!session) {
+  if (!user) {
     return <div>{children}</div>;
   }
 
-  const isAdmin = session.user.role === "admin";
+  const isAdmin = user.role === "admin";
   const allNavigation = isAdmin
     ? [...navigation, ...adminNavigation]
     : navigation;
@@ -82,8 +85,7 @@ export default function Layout({ children }) {
             <nav className="mt-5 px-2 space-y-1">
               {allNavigation.map((item) => {
                 const isActive =
-                  router.pathname === item.href ||
-                  router.pathname.startsWith(item.href);
+                  pathname === item.href || pathname.startsWith(item.href);
                 return (
                   <Link
                     key={item.name}
@@ -120,8 +122,7 @@ export default function Layout({ children }) {
               <nav className="mt-5 flex-1 px-2 space-y-1">
                 {allNavigation.map((item) => {
                   const isActive =
-                    router.pathname === item.href ||
-                    router.pathname.startsWith(item.href);
+                    pathname === item.href || pathname.startsWith(item.href);
                   return (
                     <Link
                       key={item.name}
@@ -162,7 +163,7 @@ export default function Layout({ children }) {
                 <div className="relative w-full text-gray-400 focus-within:text-gray-600">
                   <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none">
                     <span className="text-sm font-medium text-gray-900">
-                      Welcome, {session.user.name}
+                      Welcome, {user.name}
                     </span>
                   </div>
                 </div>
@@ -174,7 +175,7 @@ export default function Layout({ children }) {
                 {isAdmin ? "Admin" : "Staff"}
               </span>
               <button
-                onClick={() => signOut({ callbackUrl: "/auth/signin" })}
+                onClick={logout}
                 className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded-md text-sm font-medium"
               >
                 Sign Out
