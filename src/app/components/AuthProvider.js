@@ -34,8 +34,11 @@ export function AuthProvider({ children }) {
   };
 
   const login = async (email, password) => {
-    console.log("🔐 AuthProvider login called with:", { email, passwordProvided: !!password });
-    
+    console.log("🔐 AuthProvider login called with:", {
+      email,
+      passwordProvided: !!password,
+    });
+
     try {
       console.log("📡 Making API request to /api/auth/login");
       const response = await fetch("/api/auth/login", {
