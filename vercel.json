@@ -14,10 +14,5 @@
   ],
   "env": {
     "NODE_ENV": "production"
-  },
-  "functions": {
-    "src/app/api/**/*.js": {
-      "runtime": "nodejs18.x"
-    }
   }
 }
