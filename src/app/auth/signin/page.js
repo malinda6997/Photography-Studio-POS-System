@@ -13,17 +13,33 @@ export default function SignIn() {
   const router = useRouter();
   const { login } = useAuth();
 
+  // Test if JavaScript is working
+  console.log("🎯 SignIn component loaded!", new Date().toLocaleTimeString());
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("🚀 Form submitted!");
+    console.log("📧 Email:", email);
+    console.log("🔑 Password:", password ? "***provided***" : "empty");
+    
     setLoading(true);
     setError("");
 
-    const result = await login(email, password);
+    try {
+      console.log("🔄 Calling login function...");
+      const result = await login(email, password);
+      console.log("📋 Login result:", result);
 
-    if (result.success) {
-      router.push("/dashboard");
-    } else {
-      setError(result.error || "Invalid credentials");
+      if (result && result.success) {
+        console.log("✅ Login successful, redirecting to dashboard...");
+        router.push("/dashboard");
+      } else {
+        console.log("❌ Login failed:", result?.error);
+        setError(result?.error || "Invalid credentials");
+      }
+    } catch (error) {
+      console.error("💥 Login error:", error);
+      setError("An unexpected error occurred. Please try again.");
     }
 
     setLoading(false);
@@ -53,7 +69,6 @@ export default function SignIn() {
                 name="email"
                 type="email"
                 autoComplete="email"
-                required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-600 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
@@ -69,7 +84,6 @@ export default function SignIn() {
                 name="password"
                 type={showPassword ? "text" : "password"}
                 autoComplete="current-password"
-                required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="appearance-none rounded-none relative block w-full px-3 py-2 pr-10 border border-gray-300 placeholder-gray-600 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
@@ -95,10 +109,35 @@ export default function SignIn() {
             </div>
           )}
 
+          {/* Quick fill buttons for testing */}
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setEmail("admin@shine.com");
+                setPassword("admin123");
+              }}
+              className="flex-1 py-1 px-2 text-xs bg-gray-100 border border-gray-300 rounded text-gray-700 hover:bg-gray-200"
+            >
+              Fill Admin
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setEmail("staff@shine.com");
+                setPassword("staff123");
+              }}
+              className="flex-1 py-1 px-2 text-xs bg-gray-100 border border-gray-300 rounded text-gray-700 hover:bg-gray-200"
+            >
+              Fill Staff
+            </button>
+          </div>
+
           <div>
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || (!email.trim() || !password.trim())}
+              onClick={() => console.log("🔘 Button clicked! Email:", email, "Password:", password ? "provided" : "empty")}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-colors duration-200"
             >
               {loading ? "Signing in..." : "Sign in"}

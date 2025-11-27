@@ -34,23 +34,30 @@ export function AuthProvider({ children }) {
   };
 
   const login = async (email, password) => {
+    console.log("🔐 AuthProvider login called with:", { email, passwordProvided: !!password });
+    
     try {
+      console.log("📡 Making API request to /api/auth/login");
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
+      console.log("📥 API Response status:", response.status);
+
       if (!response.ok) {
         const error = await response.json();
+        console.log("❌ API Error response:", error);
         throw new Error(error.error || "Login failed");
       }
 
       const data = await response.json();
+      console.log("✅ API Success response:", { user: data.user });
       setUser(data.user);
       return { success: true };
     } catch (error) {
-      console.error("Login failed:", error);
+      console.error("💥 Login failed:", error);
       return { success: false, error: error.message };
     }
   };
