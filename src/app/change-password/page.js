@@ -89,7 +89,7 @@ export default function ChangePassword() {
       <div className="min-h-screen bg-gray-50 py-10">
         <div className="max-w-md mx-auto bg-white rounded-lg shadow-md">
           <div className="px-6 py-8">
-            <h1 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">
               Change Password
             </h1>
 
@@ -257,7 +257,7 @@ export default function ChangePassword() {
               </div>
             </form>
 
-            <div className="mt-6 pt-6 border-t border-gray-200">
+            <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-600">
               <div className="text-sm text-gray-600">
                 <h3 className="font-medium mb-2">Password Requirements:</h3>
                 <ul className="list-disc list-inside space-y-1 text-xs">

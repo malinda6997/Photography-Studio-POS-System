@@ -27,7 +27,9 @@ export default function UsersManagement() {
     return (
       <Layout>
         <div className="text-center py-12">
-          <h2 className="text-2xl font-bold text-gray-900">Access Denied</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+            Access Denied
+          </h2>
           <p className="text-gray-600">
             You need admin privileges to access this page.
           </p>
@@ -151,8 +153,8 @@ export default function UsersManagement() {
       <div className="py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">
-              User Management
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+              Users Management
             </h1>
             <button
               onClick={() => setShowCreateModal(true)}
@@ -163,7 +165,7 @@ export default function UsersManagement() {
             </button>
           </div>
 
-          <div className="bg-white shadow rounded-lg">
+          <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
@@ -185,11 +187,11 @@ export default function UsersManagement() {
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-600">
                   {users.map((userData) => (
                     <tr key={userData._id}>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900">
+                        <div className="text-sm font-medium text-gray-900 dark:text-white">
                           {userData.name}
                           {userData._id === user?.id && (
                             <span className="ml-2 text-xs text-indigo-600">
@@ -198,7 +200,7 @@ export default function UsersManagement() {
                           )}
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
                         {userData.email}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -337,7 +339,7 @@ export default function UsersManagement() {
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
             <div className="mt-3">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
                 Edit User
               </h3>
               <form onSubmit={handleEdit}>

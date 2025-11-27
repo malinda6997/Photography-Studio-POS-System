@@ -187,7 +187,9 @@ export default function PaymentsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-8">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Payments</h1>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                Payments
+              </h1>
               <p className="mt-1 text-sm text-gray-600">
                 Track and record customer payments
               </p>
@@ -203,7 +205,7 @@ export default function PaymentsPage() {
 
           {/* Summary Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <div className="bg-white p-6 rounded-lg shadow">
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
               <div className="flex items-center">
                 <BanknotesIcon className="h-8 w-8 text-green-500" />
                 <div className="ml-4">
@@ -231,9 +233,9 @@ export default function PaymentsPage() {
               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-lg shadow">
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
               <div className="flex items-center">
-                <CreditCardIcon className="h-8 w-8 text-purple-500" />
+                <CalendarIcon className="h-8 w-8 text-purple-500" />
                 <div className="ml-4">
                   <p className="text-sm font-medium text-gray-600">
                     Pending Invoices
@@ -317,7 +319,7 @@ export default function PaymentsPage() {
                           </div>
                           <div className="ml-4">
                             <div className="flex items-center">
-                              <p className="text-sm font-medium text-gray-900">
+                              <p className="text-sm font-medium text-gray-900 dark:text-white">
                                 {payment.invoice?.invoiceNumber ||
                                   "Unknown Invoice"}
                               </p>
@@ -342,7 +344,7 @@ export default function PaymentsPage() {
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="text-lg font-semibold text-gray-900">
+                          <p className="text-lg font-semibold text-gray-900 dark:text-white">
                             LKR {payment.amount.toFixed(2)}
                           </p>
                           {payment.reference && (
