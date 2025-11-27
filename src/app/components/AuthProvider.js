@@ -1,7 +1,12 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
 
-const AuthContext = createContext({});
+const AuthContext = createContext({
+  user: null,
+  loading: true,
+  login: () => {},
+  logout: () => {},
+});
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -14,8 +19,12 @@ export function AuthProvider({ children }) {
   const checkAuth = async () => {
     try {
       const response = await fetch("/api/auth/session");
-      const data = await response.json();
-      setUser(data.user);
+      if (response.ok) {
+        const data = await response.json();
+        setUser(data.user);
+      } else {
+        setUser(null);
+      }
     } catch (error) {
       console.error("Auth check failed:", error);
       setUser(null);
@@ -50,8 +59,19 @@ export function AuthProvider({ children }) {
     try {
       await fetch("/api/auth/logout", { method: "POST" });
       setUser(null);
+      // Clear the auth-token cookie manually
+      document.cookie =
+        "auth-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; secure; samesite=strict;";
+      // Force redirect to login page
+      window.location.href = "/auth/signin";
     } catch (error) {
       console.error("Logout failed:", error);
+      // Even if logout API fails, clear user and redirect
+      setUser(null);
+      // Clear the auth-token cookie manually
+      document.cookie =
+        "auth-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; secure; samesite=strict;";
+      window.location.href = "/auth/signin";
     }
   };
 

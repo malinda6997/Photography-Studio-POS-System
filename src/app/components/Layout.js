@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useSession, signOut } from "next-auth/react";
+import { useAuth } from "./AuthProvider";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { usePathname } from "next/navigation";
 import {
   HomeIcon,
   DocumentTextIcon,
@@ -10,6 +10,7 @@ import {
   CreditCardIcon,
   ChartBarIcon,
   UserGroupIcon,
+  KeyIcon,
   Bars3Icon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
@@ -21,6 +22,7 @@ const navigation = [
   { name: "Inventory", href: "/frames", icon: CubeIcon },
   { name: "Bookings", href: "/bookings", icon: CalendarIcon },
   { name: "Payments", href: "/payments", icon: CreditCardIcon },
+  { name: "Change Password", href: "/change-password", icon: KeyIcon },
 ];
 
 const adminNavigation = [
@@ -29,15 +31,15 @@ const adminNavigation = [
 ];
 
 export default function Layout({ children }) {
-  const { data: session } = useSession();
-  const router = useRouter();
+  const { user, logout } = useAuth();
+  const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  if (!session) {
+  if (!user) {
     return <div>{children}</div>;
   }
 
-  const isAdmin = session.user.role === "admin";
+  const isAdmin = user.role === "admin";
   const allNavigation = isAdmin
     ? [...navigation, ...adminNavigation]
     : navigation;
@@ -65,7 +67,7 @@ export default function Layout({ children }) {
           <div className="absolute top-0 right-0 -mr-12 pt-2">
             <button
               type="button"
-              className="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+              className="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white cursor-pointer hover:bg-indigo-600"
               onClick={() => setSidebarOpen(false)}
             >
               <span className="sr-only">Close sidebar</span>
@@ -82,16 +84,15 @@ export default function Layout({ children }) {
             <nav className="mt-5 px-2 space-y-1">
               {allNavigation.map((item) => {
                 const isActive =
-                  router.pathname === item.href ||
-                  router.pathname.startsWith(item.href);
+                  pathname === item.href || pathname.startsWith(item.href);
                 return (
                   <Link
                     key={item.name}
                     href={item.href}
-                    className={`group flex items-center px-2 py-2 text-base font-medium rounded-md ${
+                    className={`group flex items-center px-2 py-2 text-base font-medium rounded-md cursor-pointer transition-colors duration-200 ${
                       isActive
                         ? "bg-indigo-800 text-white"
-                        : "text-indigo-100 hover:bg-indigo-600"
+                        : "text-indigo-100 hover:bg-indigo-600 hover:text-white"
                     }`}
                     onClick={() => setSidebarOpen(false)}
                   >
@@ -120,16 +121,15 @@ export default function Layout({ children }) {
               <nav className="mt-5 flex-1 px-2 space-y-1">
                 {allNavigation.map((item) => {
                   const isActive =
-                    router.pathname === item.href ||
-                    router.pathname.startsWith(item.href);
+                    pathname === item.href || pathname.startsWith(item.href);
                   return (
                     <Link
                       key={item.name}
                       href={item.href}
-                      className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
+                      className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md cursor-pointer transition-colors duration-200 ${
                         isActive
                           ? "bg-indigo-800 text-white"
-                          : "text-indigo-100 hover:bg-indigo-600"
+                          : "text-indigo-100 hover:bg-indigo-600 hover:text-white"
                       }`}
                     >
                       <item.icon className="mr-3 h-6 w-6 text-indigo-300" />
@@ -149,7 +149,7 @@ export default function Layout({ children }) {
         <div className="relative z-10 shrink-0 flex h-16 bg-white shadow">
           <button
             type="button"
-            className="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden"
+            className="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden cursor-pointer hover:bg-gray-50"
             onClick={() => setSidebarOpen(true)}
           >
             <span className="sr-only">Open sidebar</span>
@@ -162,7 +162,7 @@ export default function Layout({ children }) {
                 <div className="relative w-full text-gray-400 focus-within:text-gray-600">
                   <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none">
                     <span className="text-sm font-medium text-gray-900">
-                      Welcome, {session.user.name}
+                      Welcome, {user.name}
                     </span>
                   </div>
                 </div>
@@ -174,8 +174,8 @@ export default function Layout({ children }) {
                 {isAdmin ? "Admin" : "Staff"}
               </span>
               <button
-                onClick={() => signOut({ callbackUrl: "/auth/signin" })}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded-md text-sm font-medium"
+                onClick={logout}
+                className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded-md text-sm font-medium cursor-pointer transition-colors duration-200"
               >
                 Sign Out
               </button>
