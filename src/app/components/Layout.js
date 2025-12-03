@@ -10,6 +10,7 @@ import {
   ChartBarIcon,
   UserGroupIcon,
   UserIcon,
+  TagIcon,
   Bars3Icon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
@@ -18,6 +19,7 @@ const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: HomeIcon },
   { name: "Create Invoice", href: "/invoices/create", icon: DocumentTextIcon },
   { name: "Invoices", href: "/invoices", icon: DocumentTextIcon },
+  { name: "Categories", href: "/categories", icon: TagIcon },
   { name: "Inventory", href: "/frames", icon: CubeIcon },
   { name: "Bookings", href: "/bookings", icon: CalendarIcon },
   { name: "Profile", href: "/profile", icon: UserIcon },
@@ -189,4 +191,3 @@ export default function Layout({ children }) {
     </div>
   );
 }
-
