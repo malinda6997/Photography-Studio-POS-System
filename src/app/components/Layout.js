@@ -43,7 +43,7 @@ export default function Layout({ children }) {
     : navigation;
 
   return (
-    <div className="h-screen flex overflow-hidden bg-gray-100 dark:bg-gray-900">
+    <div className="h-screen flex overflow-hidden bg-gray-700 dark:bg-gray-900">
       {/* Mobile sidebar */}
       <div
         className={`fixed inset-0 flex z-40 md:hidden ${
@@ -189,3 +189,4 @@ export default function Layout({ children }) {
     </div>
   );
 }
+

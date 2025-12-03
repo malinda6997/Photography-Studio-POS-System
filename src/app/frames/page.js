@@ -343,7 +343,7 @@ export default function FramesPage() {
                             className={`px-2 py-1 rounded-full text-xs font-medium ${
                               frame.isActive
                                 ? "bg-green-100 text-green-800"
-                                : "bg-gray-100 text-gray-800"
+                                : "bg-gray-700 text-gray-800"
                             }`}
                           >
                             {frame.isActive ? "Active" : "Inactive"}
@@ -611,3 +611,4 @@ export default function FramesPage() {
     </Layout>
   );
 }
+

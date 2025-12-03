@@ -94,7 +94,7 @@ export default function ChangePassword() {
             </h1>
 
             {user && (
-              <div className="mb-6 p-4 bg-gray-100 rounded-lg">
+              <div className="mb-6 p-4 bg-gray-700 rounded-lg">
                 <p className="text-sm text-gray-700">
                   <span className="font-medium">Logged in as:</span> {user.name}
                 </p>
@@ -274,3 +274,4 @@ export default function ChangePassword() {
     </Layout>
   );
 }
+

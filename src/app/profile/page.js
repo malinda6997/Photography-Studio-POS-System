@@ -6,15 +6,12 @@ import {
   UserCircleIcon,
   EyeIcon,
   EyeSlashIcon,
-  SunIcon,
-  MoonIcon,
 } from "@heroicons/react/24/outline";
 
 export default function Profile() {
   const { user, loading: authLoading, refreshUser } = useAuth();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
-  const [darkMode, setDarkMode] = useState(false);
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -57,27 +54,10 @@ export default function Profile() {
     }
   }, [user, isUpdating]);
 
-  // Load dark mode preference from localStorage (only once)
+  // Force dark mode on load
   useEffect(() => {
-    const savedDarkMode = localStorage.getItem("darkMode") === "true";
-    setDarkMode(savedDarkMode);
-    if (savedDarkMode) {
-      document.documentElement.classList.add("dark");
-    }
+    document.documentElement.classList.add("dark");
   }, []);
-
-  // Toggle dark mode
-  const toggleDarkMode = () => {
-    const newDarkMode = !darkMode;
-    setDarkMode(newDarkMode);
-    localStorage.setItem("darkMode", newDarkMode.toString());
-
-    if (newDarkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  };
 
   // Handle profile update
   const handleProfileUpdate = async (e) => {
@@ -204,10 +184,10 @@ export default function Profile() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-2xl font-bold text-white">
             Profile Settings
           </h1>
-          <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+          <p className="mt-1 text-sm text-gray-400">
             Manage your account settings and preferences
           </p>
         </div>
@@ -217,8 +197,8 @@ export default function Profile() {
           <div
             className={`mb-6 p-4 rounded-lg ${
               message.type === "success"
-                ? "bg-green-50 border border-green-200 text-green-700 dark:bg-green-900/20 dark:border-green-800 dark:text-green-300"
-                : "bg-red-50 border border-red-200 text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300"
+                ? "bg-green-900/20 border border-green-800 text-green-300"
+                : "bg-red-900/20 border border-red-800 text-red-300"
             }`}
           >
             {message.text}
@@ -228,8 +208,8 @@ export default function Profile() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Profile Avatar Section */}
           <div className="lg:col-span-1">
-            <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-              <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+            <div className="bg-gray-800 shadow rounded-lg p-6">
+              <h2 className="text-lg font-medium text-white mb-4">
                 Profile Avatar
               </h2>
 
@@ -239,46 +219,13 @@ export default function Profile() {
                 </div>
 
                 <div className="text-center">
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">
+                  <p className="text-sm font-medium text-white">
                     {profileData.name || user?.name || "User"}
                   </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                  <p className="text-xs text-gray-400">
                     {profileData.email || user?.email}
                   </p>
                 </div>
-              </div>
-            </div>
-
-            {/* Dark Mode Toggle */}
-            <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6 mt-6">
-              <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
-                Appearance
-              </h2>
-
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  {darkMode ? (
-                    <MoonIcon className="w-5 h-5 text-gray-600 dark:text-gray-400 mr-3" />
-                  ) : (
-                    <SunIcon className="w-5 h-5 text-gray-600 dark:text-gray-400 mr-3" />
-                  )}
-                  <span className="text-sm font-medium text-gray-900 dark:text-white">
-                    {darkMode ? "Dark Mode" : "Light Mode"}
-                  </span>
-                </div>
-
-                <button
-                  onClick={toggleDarkMode}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${
-                    darkMode ? "bg-indigo-600" : "bg-gray-200"
-                  }`}
-                >
-                  <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                      darkMode ? "translate-x-6" : "translate-x-1"
-                    }`}
-                  />
-                </button>
               </div>
             </div>
           </div>
@@ -286,14 +233,14 @@ export default function Profile() {
           {/* Profile Information and Password */}
           <div className="lg:col-span-2 space-y-6">
             {/* Profile Information */}
-            <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-              <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+            <div className="bg-gray-800 shadow rounded-lg p-6">
+              <h2 className="text-lg font-medium text-white mb-4">
                 Profile Information
               </h2>
 
               <form onSubmit={handleProfileUpdate} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
                     Full Name
                     {user && (
                       <span className="ml-2 text-xs text-gray-500">
@@ -310,13 +257,13 @@ export default function Profile() {
                         name: e.target.value,
                       }))
                     }
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-gray-700 text-white"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
                     Email Address
                   </label>
                   <input
@@ -328,7 +275,7 @@ export default function Profile() {
                         email: e.target.value,
                       }))
                     }
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className="w-full px-3 py-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-gray-700 text-white"
                     required
                   />
                 </div>
@@ -344,14 +291,14 @@ export default function Profile() {
             </div>
 
             {/* Change Password */}
-            <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-              <h2 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+            <div className="bg-gray-800 shadow rounded-lg p-6">
+              <h2 className="text-lg font-medium text-white mb-4">
                 Change Password
               </h2>
 
               <form onSubmit={handlePasswordChange} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
                     Current Password
                   </label>
                   <div className="relative">
@@ -364,7 +311,7 @@ export default function Profile() {
                           currentPassword: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      className="w-full px-3 py-2 pr-10 border border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-gray-700 text-white"
                       required
                     />
                     <button
@@ -384,7 +331,7 @@ export default function Profile() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
                     New Password
                   </label>
                   <div className="relative">
@@ -397,7 +344,7 @@ export default function Profile() {
                           newPassword: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      className="w-full px-3 py-2 pr-10 border border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-gray-700 text-white"
                       required
                     />
                     <button
@@ -415,7 +362,7 @@ export default function Profile() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
                     Confirm New Password
                   </label>
                   <div className="relative">
@@ -428,7 +375,7 @@ export default function Profile() {
                           confirmPassword: e.target.value,
                         }))
                       }
-                      className="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                      className="w-full px-3 py-2 pr-10 border border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-gray-700 text-white"
                       required
                     />
                     <button
@@ -462,3 +409,4 @@ export default function Profile() {
     </Layout>
   );
 }
+

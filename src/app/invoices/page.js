@@ -62,7 +62,7 @@ export default function InvoicesPage() {
       partial: "bg-blue-100 text-blue-800",
       paid: "bg-green-100 text-green-800",
     };
-    return colors[status] || "bg-gray-100 text-gray-800";
+    return colors[status] || "bg-gray-700 text-gray-800";
   };
 
   if (!user) {
@@ -106,7 +106,7 @@ export default function InvoicesPage() {
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow mb-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
                   Search Invoices
                 </label>
                 <div className="relative">
@@ -269,7 +269,7 @@ export default function InvoicesPage() {
                       }))
                     }
                     disabled={pagination.current === 1}
-                    className="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50"
+                    className="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50"
                   >
                     Previous
                   </button>
@@ -281,14 +281,14 @@ export default function InvoicesPage() {
                       }))
                     }
                     disabled={pagination.current === pagination.pages}
-                    className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50"
+                    className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50"
                   >
                     Next
                   </button>
                 </div>
                 <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                   <div>
-                    <p className="text-sm text-gray-700 dark:text-gray-300">
+                    <p className="text-sm text-gray-300">
                       Showing page{" "}
                       <span className="font-medium">{pagination.current}</span>{" "}
                       of <span className="font-medium">{pagination.pages}</span>{" "}
@@ -332,3 +332,4 @@ export default function InvoicesPage() {
     </Layout>
   );
 }
+

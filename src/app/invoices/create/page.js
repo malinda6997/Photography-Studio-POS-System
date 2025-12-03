@@ -210,19 +210,17 @@ export default function CreateInvoicePage() {
       <div className="py-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-              Create Invoice
-            </h1>
-            <p className="mt-1 text-sm text-gray-600">
+            <h1 className="text-3xl font-bold text-white">Create Invoice</h1>
+            <p className="mt-1 text-sm text-gray-400">
               Generate a new invoice for customer orders
             </p>
           </div>
 
           <form onSubmit={handleCreateInvoice} className="space-y-6">
             {/* Customer Selection */}
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+            <div className="bg-gray-800 p-6 rounded-lg shadow">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+                <h3 className="text-lg font-medium text-white">
                   Customer Information
                 </h3>
                 <button
@@ -247,7 +245,7 @@ export default function CreateInvoicePage() {
                         name: e.target.value,
                       }))
                     }
-                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 text-white"
                     required
                   />
                   <input
@@ -260,7 +258,7 @@ export default function CreateInvoicePage() {
                         mobile: e.target.value,
                       }))
                     }
-                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 text-white"
                     required
                   />
                   <input
@@ -273,7 +271,7 @@ export default function CreateInvoicePage() {
                         email: e.target.value,
                       }))
                     }
-                    className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 text-white"
                   />
                   <div className="flex gap-2">
                     <button
@@ -286,7 +284,7 @@ export default function CreateInvoicePage() {
                     <button
                       type="button"
                       onClick={() => setShowNewCustomer(false)}
-                      className="px-4 py-2 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-400 dark:hover:bg-gray-500"
+                      className="px-4 py-2 bg-gray-600 text-gray-200 hover:bg-gray-500"
                     >
                       Cancel
                     </button>
@@ -301,7 +299,7 @@ export default function CreateInvoicePage() {
                       placeholder="Search customers..."
                       value={customerSearch}
                       onChange={(e) => setCustomerSearch(e.target.value)}
-                      className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                      className="pl-10 w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 text-white"
                     />
                   </div>
                   <select
@@ -312,7 +310,7 @@ export default function CreateInvoicePage() {
                         customerId: e.target.value,
                       }))
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 text-white"
                     required
                   >
                     <option value="">Select a customer</option>
@@ -327,9 +325,9 @@ export default function CreateInvoicePage() {
             </div>
 
             {/* Items */}
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+            <div className="bg-gray-800 p-6 rounded-lg shadow">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+                <h3 className="text-lg font-medium text-white">
                   Invoice Items
                 </h3>
                 <button
@@ -346,10 +344,10 @@ export default function CreateInvoicePage() {
                 {invoiceData.items.map((item, index) => (
                   <div
                     key={index}
-                    className="grid grid-cols-12 gap-4 items-end p-4 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800"
+                    className="grid grid-cols-12 gap-4 items-end p-4 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-800"
                   >
                     <div className="col-span-2">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-gray-300 mb-1">
                         Type
                       </label>
                       <select
@@ -357,7 +355,7 @@ export default function CreateInvoicePage() {
                         onChange={(e) =>
                           handleItemChange(index, "type", e.target.value)
                         }
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                        className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 text-white"
                       >
                         <option value="service">Service</option>
                         <option value="frame">Frame</option>
@@ -366,7 +364,7 @@ export default function CreateInvoicePage() {
 
                     {item.type === "frame" ? (
                       <div className="col-span-4">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-gray-300 mb-1">
                           Frame
                         </label>
                         <select
@@ -374,7 +372,7 @@ export default function CreateInvoicePage() {
                           onChange={(e) =>
                             handleItemChange(index, "refId", e.target.value)
                           }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 text-white"
                         >
                           <option value="">Select a frame</option>
                           {frames.map((frame) => (
@@ -386,7 +384,7 @@ export default function CreateInvoicePage() {
                       </div>
                     ) : (
                       <div className="col-span-4">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-gray-300 mb-1">
                           Description
                         </label>
                         <input
@@ -399,14 +397,14 @@ export default function CreateInvoicePage() {
                               e.target.value
                             )
                           }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 text-white"
                           placeholder="Enter service description"
                         />
                       </div>
                     )}
 
                     <div className="col-span-2">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-gray-300 mb-1">
                         Qty
                       </label>
                       <input
@@ -420,12 +418,12 @@ export default function CreateInvoicePage() {
                             parseInt(e.target.value) || 1
                           )
                         }
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                        className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 text-white"
                       />
                     </div>
 
                     <div className="col-span-2">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-gray-300 mb-1">
                         Unit Price
                       </label>
                       <input
@@ -440,16 +438,16 @@ export default function CreateInvoicePage() {
                             parseFloat(e.target.value) || 0
                           )
                         }
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                        className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 text-white"
                         disabled={item.type === "frame" && item.refId}
                       />
                     </div>
 
                     <div className="col-span-1">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-gray-300 mb-1">
                         Total
                       </label>
-                      <div className="px-3 py-2 bg-gray-100 rounded-md text-sm font-medium">
+                      <div className="px-3 py-2 bg-gray-700 rounded-md text-sm font-medium">
                         {(item.qty * item.unitPrice).toFixed(2)}
                       </div>
                     </div>
@@ -471,15 +469,15 @@ export default function CreateInvoicePage() {
             </div>
 
             {/* Summary and Payment */}
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+            <div className="bg-gray-800 p-6 rounded-lg shadow">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+                  <h3 className="text-lg font-medium text-white mb-4">
                     Additional Details
                   </h3>
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
                         Advance Payment
                       </label>
                       <input
@@ -493,12 +491,12 @@ export default function CreateInvoicePage() {
                             advancePaid: parseFloat(e.target.value) || 0,
                           }))
                         }
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                        className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 text-white"
                         placeholder="0.00"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
                         Notes
                       </label>
                       <textarea
@@ -510,7 +508,7 @@ export default function CreateInvoicePage() {
                           }))
                         }
                         rows="3"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                        className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 text-white"
                         placeholder="Additional notes..."
                       />
                     </div>
@@ -518,10 +516,10 @@ export default function CreateInvoicePage() {
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+                  <h3 className="text-lg font-medium text-white mb-4">
                     Invoice Summary
                   </h3>
-                  <div className="bg-gray-50 p-4 rounded-lg space-y-2">
+                  <div className="bg-gray-700 p-4 rounded-lg space-y-2 text-white">
                     <div className="flex justify-between text-sm">
                       <span>Subtotal:</span>
                       <span>LKR {calculateTotal().toFixed(2)}</span>
@@ -530,7 +528,7 @@ export default function CreateInvoicePage() {
                       <span>Advance Payment:</span>
                       <span>LKR {invoiceData.advancePaid.toFixed(2)}</span>
                     </div>
-                    <hr />
+                    <hr className="border-gray-600" />
                     <div className="flex justify-between font-medium">
                       <span>Balance Due:</span>
                       <span>
@@ -550,7 +548,7 @@ export default function CreateInvoicePage() {
               <button
                 type="button"
                 onClick={() => router.push("/invoices")}
-                className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+                className="px-6 py-2 border border-gray-600 text-gray-300 rounded-md hover:bg-gray-700"
               >
                 Cancel
               </button>

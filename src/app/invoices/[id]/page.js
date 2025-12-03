@@ -377,7 +377,7 @@ export default function InvoiceDetails() {
           <Button
             onClick={handlePrint}
             variant="outline"
-            className="bg-gray-50 hover:bg-gray-100 text-gray-700 border-gray-200"
+            className="bg-gray-700 hover:bg-gray-600 text-gray-200 border-gray-600"
           >
             <PrinterIcon className="mr-2 h-4 w-4" />
             Print

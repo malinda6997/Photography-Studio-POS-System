@@ -221,7 +221,7 @@ export default function BookingsPage() {
       case "cancelled":
         return "bg-red-100 text-red-800";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-gray-700 text-gray-800";
     }
   };
 
@@ -634,3 +634,4 @@ export default function BookingsPage() {
     </Layout>
   );
 }
+
