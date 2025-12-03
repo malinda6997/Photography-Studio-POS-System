@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useAuth } from "../components/AuthProvider";
+import { useToast } from "../../components/ui/toast";
 import Layout from "../components/Layout";
 import {
   UserCircleIcon,
@@ -10,6 +11,7 @@ import {
 
 export default function Profile() {
   const { user, loading: authLoading, refreshUser } = useAuth();
+  const toast = useToast();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: "", text: "" });
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
@@ -87,7 +89,7 @@ export default function Profile() {
       console.log("Profile update response data:", data);
 
       if (response.ok) {
-        setMessage({ type: "success", text: "Profile updated successfully!" });
+        toast.success("Profile updated successfully!");
         console.log("Profile update successful, refreshing user context...");
 
         // Refresh user context to get updated data from database
@@ -100,18 +102,14 @@ export default function Profile() {
           setIsUpdating(false);
         }, 200);
       } else {
-        setMessage({
-          type: "error",
-          text: data.error || `Failed to update profile (${response.status})`,
-        });
+        toast.error(
+          data.error || `Failed to update profile (${response.status})`
+        );
         setIsUpdating(false);
       }
     } catch (error) {
       console.error("Profile update error:", error);
-      setMessage({
-        type: "error",
-        text: `Failed to update profile: ${error.message}`,
-      });
+      toast.error(`Failed to update profile: ${error.message}`);
       setIsUpdating(false);
     } finally {
       setLoading(false);
@@ -123,15 +121,12 @@ export default function Profile() {
     e.preventDefault();
 
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      setMessage({ type: "error", text: "New passwords do not match" });
+      toast.error("New passwords do not match");
       return;
     }
 
     if (passwordData.newPassword.length < 6) {
-      setMessage({
-        type: "error",
-        text: "New password must be at least 6 characters",
-      });
+      toast.error("New password must be at least 6 characters");
       return;
     }
 
@@ -149,21 +144,18 @@ export default function Profile() {
       const data = await response.json();
 
       if (response.ok) {
-        setMessage({ type: "success", text: "Password changed successfully!" });
+        toast.success("Password changed successfully!");
         setPasswordData({
           currentPassword: "",
           newPassword: "",
           confirmPassword: "",
         });
       } else {
-        setMessage({
-          type: "error",
-          text: data.error || "Failed to change password",
-        });
+        toast.error(data.error || "Failed to change password");
       }
     } catch (error) {
       console.error("Password change error:", error);
-      setMessage({ type: "error", text: "Failed to change password" });
+      toast.error("Failed to change password");
     } finally {
       setLoading(false);
     }
@@ -184,9 +176,7 @@ export default function Profile() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-white">
-            Profile Settings
-          </h1>
+          <h1 className="text-2xl font-bold text-white">Profile Settings</h1>
           <p className="mt-1 text-sm text-gray-400">
             Manage your account settings and preferences
           </p>
@@ -409,4 +399,3 @@ export default function Profile() {
     </Layout>
   );
 }
-

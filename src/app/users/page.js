@@ -1,11 +1,15 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useAuth } from "../components/AuthProvider";
+import { useToast } from "../../components/ui/toast";
+import { useConfirm } from "../../components/ui/confirm";
 import Layout from "../components/Layout";
 import { PlusIcon, PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 export default function UsersManagement() {
   const { user } = useAuth();
+  const toast = useToast();
+  const { confirm } = useConfirm();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -27,9 +31,7 @@ export default function UsersManagement() {
     return (
       <Layout>
         <div className="text-center py-12">
-          <h2 className="text-2xl font-bold text-white">
-            Access Denied
-          </h2>
+          <h2 className="text-2xl font-bold text-white">Access Denied</h2>
           <p className="text-gray-600">
             You need admin privileges to access this page.
           </p>
@@ -62,16 +64,17 @@ export default function UsersManagement() {
       });
 
       if (response.ok) {
+        toast.success("User created successfully!");
         await fetchUsers();
         setShowCreateModal(false);
         resetForm();
       } else {
         const error = await response.json();
-        alert(error.error || "Failed to create user");
+        toast.error(error.error || "Failed to create user");
       }
     } catch (error) {
       console.error("Create user error:", error);
-      alert("Failed to create user");
+      toast.error("Failed to create user");
     }
   };
 
@@ -89,36 +92,46 @@ export default function UsersManagement() {
       });
 
       if (response.ok) {
+        toast.success("User updated successfully!");
         await fetchUsers();
         setShowEditModal(false);
         setEditingUser(null);
         resetForm();
       } else {
         const error = await response.json();
-        alert(error.error || "Failed to update user");
+        toast.error(error.error || "Failed to update user");
       }
     } catch (error) {
       console.error("Update user error:", error);
-      alert("Failed to update user");
+      toast.error("Failed to update user");
     }
   };
 
   const handleDelete = async (userId, userName) => {
-    if (window.confirm(`Are you sure you want to delete user "${userName}"?`)) {
+    const confirmed = await confirm({
+      title: "Delete User",
+      message: `Are you sure you want to delete user "${userName}"? This action cannot be undone.`,
+      confirmText: "Delete",
+      cancelText: "Cancel",
+      type: "danger",
+    });
+
+    if (confirmed) {
       try {
         const response = await fetch(`/api/users/${userId}`, {
           method: "DELETE",
         });
 
         if (response.ok) {
+          toast.success(`User "${userName}" deleted successfully`);
           await fetchUsers();
         } else {
           const error = await response.json();
-          alert(error.error || "Failed to delete user");
+          toast.error(error.error || "Failed to delete user");
         }
       } catch (error) {
         console.error("Delete user error:", error);
-        alert("Failed to delete user");
+        toast.error("Failed to delete user");
       }
     }
   };
@@ -153,9 +166,7 @@ export default function UsersManagement() {
       <div className="py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-8">
-            <h1 className="text-3xl font-bold text-white">
-              Users Management
-            </h1>
+            <h1 className="text-3xl font-bold text-white">Users Management</h1>
             <button
               onClick={() => setShowCreateModal(true)}
               className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg flex items-center"
@@ -249,12 +260,12 @@ export default function UsersManagement() {
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-gray-800">
             <div className="mt-3">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">
+              <h3 className="text-lg font-medium text-white mb-4">
                 Create New User
               </h3>
               <form onSubmit={handleCreate}>
                 <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
                     Name
                   </label>
                   <input
@@ -264,11 +275,11 @@ export default function UsersManagement() {
                     onChange={(e) =>
                       setFormData({ ...formData, name: e.target.value })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 text-white bg-gray-700 text-white"
                   />
                 </div>
                 <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
                     Email
                   </label>
                   <input
@@ -278,11 +289,11 @@ export default function UsersManagement() {
                     onChange={(e) =>
                       setFormData({ ...formData, email: e.target.value })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 text-white"
                   />
                 </div>
                 <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
                     Password
                   </label>
                   <input
@@ -292,11 +303,11 @@ export default function UsersManagement() {
                     onChange={(e) =>
                       setFormData({ ...formData, password: e.target.value })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 text-white"
                   />
                 </div>
                 <div className="mb-6">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
                     Role
                   </label>
                   <select
@@ -304,7 +315,7 @@ export default function UsersManagement() {
                     onChange={(e) =>
                       setFormData({ ...formData, role: e.target.value })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 text-white"
                   >
                     <option value="staff">Staff</option>
                     <option value="admin">Admin</option>
@@ -317,7 +328,7 @@ export default function UsersManagement() {
                       setShowCreateModal(false);
                       resetForm();
                     }}
-                    className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400"
+                    className="px-4 py-2 bg-gray-300 text-gray-300 rounded-md hover:bg-gray-400"
                   >
                     Cancel
                   </button>
@@ -339,12 +350,10 @@ export default function UsersManagement() {
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-gray-800">
             <div className="mt-3">
-              <h3 className="text-lg font-medium text-white mb-4">
-                Edit User
-              </h3>
+              <h3 className="text-lg font-medium text-white mb-4">Edit User</h3>
               <form onSubmit={handleEdit}>
                 <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
                     Name
                   </label>
                   <input
@@ -354,11 +363,11 @@ export default function UsersManagement() {
                     onChange={(e) =>
                       setFormData({ ...formData, name: e.target.value })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 text-white"
                   />
                 </div>
                 <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
                     Email
                   </label>
                   <input
@@ -368,11 +377,11 @@ export default function UsersManagement() {
                     onChange={(e) =>
                       setFormData({ ...formData, email: e.target.value })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 text-white"
                   />
                 </div>
                 <div className="mb-6">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
                     Role
                   </label>
                   <select
@@ -380,7 +389,7 @@ export default function UsersManagement() {
                     onChange={(e) =>
                       setFormData({ ...formData, role: e.target.value })
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 text-white"
                   >
                     <option value="staff">Staff</option>
                     <option value="admin">Admin</option>
@@ -394,7 +403,7 @@ export default function UsersManagement() {
                       setEditingUser(null);
                       resetForm();
                     }}
-                    className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400"
+                    className="px-4 py-2 bg-gray-300 text-gray-300 rounded-md hover:bg-gray-400"
                   >
                     Cancel
                   </button>
@@ -413,4 +422,3 @@ export default function UsersManagement() {
     </Layout>
   );
 }
-

@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../components/AuthProvider";
+import { useToast } from "../../../components/ui/toast";
 import Layout from "../../components/Layout";
 import { useRouter } from "next/navigation";
 import {
@@ -13,6 +14,7 @@ import {
 export default function CreateInvoicePage() {
   const { user } = useAuth();
   const router = useRouter();
+  const toast = useToast();
   const [customers, setCustomers] = useState([]);
   const [frames, setFrames] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -149,11 +151,11 @@ export default function CreateInvoicePage() {
         setShowNewCustomer(false);
       } else {
         const error = await response.json();
-        alert(error.error || "Failed to create customer");
+        toast.error(error.error || "Failed to create customer");
       }
     } catch (error) {
       console.error("Create customer error:", error);
-      alert("Failed to create customer");
+      toast.error("Failed to create customer");
     }
   };
 
@@ -161,7 +163,7 @@ export default function CreateInvoicePage() {
     e.preventDefault();
 
     if (!invoiceData.customerId) {
-      alert("Please select a customer");
+      toast.warning("Please select a customer");
       return;
     }
 
@@ -170,7 +172,7 @@ export default function CreateInvoicePage() {
         (item) => !item.description || item.qty <= 0 || item.unitPrice < 0
       )
     ) {
-      alert("Please fill in all item details correctly");
+      toast.warning("Please fill in all item details correctly");
       return;
     }
 
@@ -185,15 +187,15 @@ export default function CreateInvoicePage() {
 
       if (response.ok) {
         const invoice = await response.json();
-        alert("Invoice created successfully!");
+        toast.success("Invoice created successfully!");
         router.push(`/invoices/${invoice._id}`);
       } else {
         const error = await response.json();
-        alert(error.error || "Failed to create invoice");
+        toast.error(error.error || "Failed to create invoice");
       }
     } catch (error) {
       console.error("Create invoice error:", error);
-      alert("Failed to create invoice");
+      toast.error("Failed to create invoice");
     } finally {
       setLoading(false);
     }
@@ -313,9 +315,18 @@ export default function CreateInvoicePage() {
                     className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 text-white"
                     required
                   >
-                    <option value="">Select a customer</option>
+                    <option
+                      value=""
+                      style={{ backgroundColor: "#374151", color: "#ffffff" }}
+                    >
+                      Select a customer
+                    </option>
                     {filteredCustomers.map((customer) => (
-                      <option key={customer._id} value={customer._id}>
+                      <option
+                        key={customer._id}
+                        value={customer._id}
+                        style={{ backgroundColor: "#374151", color: "#ffffff" }}
+                      >
                         {customer.name} - {customer.mobile}
                       </option>
                     ))}
@@ -357,8 +368,24 @@ export default function CreateInvoicePage() {
                         }
                         className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 text-white"
                       >
-                        <option value="service">Service</option>
-                        <option value="frame">Frame</option>
+                        <option
+                          value="service"
+                          style={{
+                            backgroundColor: "#374151",
+                            color: "#ffffff",
+                          }}
+                        >
+                          Service
+                        </option>
+                        <option
+                          value="frame"
+                          style={{
+                            backgroundColor: "#374151",
+                            color: "#ffffff",
+                          }}
+                        >
+                          Frame
+                        </option>
                       </select>
                     </div>
 
@@ -374,9 +401,24 @@ export default function CreateInvoicePage() {
                           }
                           className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 text-white"
                         >
-                          <option value="">Select a frame</option>
+                          <option
+                            value=""
+                            style={{
+                              backgroundColor: "#374151",
+                              color: "#ffffff",
+                            }}
+                          >
+                            Select a frame
+                          </option>
                           {frames.map((frame) => (
-                            <option key={frame._id} value={frame._id}>
+                            <option
+                              key={frame._id}
+                              value={frame._id}
+                              style={{
+                                backgroundColor: "#374151",
+                                color: "#ffffff",
+                              }}
+                            >
                               {frame.name} (LKR {frame.unitPrice})
                             </option>
                           ))}

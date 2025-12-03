@@ -100,6 +100,27 @@ a {
   }
 }
 
+/* Dark theme for select dropdowns and options */
+select {
+  color-scheme: dark;
+}
+
+select option {
+  background-color: #374151 !important;
+  color: #ffffff !important;
+}
+
+select:focus option {
+  background-color: #4B5563 !important;
+  color: #ffffff !important;
+}
+
+select option:hover,
+select option:checked {
+  background-color: #6366f1 !important;
+  color: #ffffff !important;
+}
+
 /* Enhanced table styling for invoices */
 .invoice-table {
   border-collapse: separate;

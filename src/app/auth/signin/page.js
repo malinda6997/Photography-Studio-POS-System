@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
+import { useToast } from "../../../components/ui/toast";
 import "./animations.css";
 
 export default function SignIn() {
@@ -10,6 +11,7 @@ export default function SignIn() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const toast = useToast();
 
   console.log("🎯 SignIn component loaded!", new Date().toLocaleTimeString());
 
@@ -33,7 +35,7 @@ export default function SignIn() {
       if (response.ok) {
         const data = await response.json();
         console.log("✅ Login successful:", data);
-        setSuccess(`Welcome ${data.user.name}! Redirecting...`);
+        toast.success(`Welcome ${data.user.name}! Redirecting...`);
 
         setTimeout(() => {
           window.location.href = "/dashboard";
@@ -41,11 +43,11 @@ export default function SignIn() {
       } else {
         const errorData = await response.json();
         console.log("❌ Login failed:", errorData);
-        setError(errorData.error || "Login failed");
+        toast.error(errorData.error || "Login failed");
       }
     } catch (err) {
       console.error("💥 Network error:", err);
-      setError("Network error: " + err.message);
+      toast.error("Network error: " + err.message);
     }
 
     setLoading(false);
@@ -245,4 +247,3 @@ export default function SignIn() {
     </div>
   );
 }
-
