@@ -1,5 +1,7 @@
 'use client';
 import { AuthProvider } from './components/AuthProvider';
+import { ToastProvider } from '../components/ui/toast';
+import { ConfirmProvider } from '../components/ui/confirm';
 import './globals.css';
 
 export default function RootLayout({
@@ -11,7 +13,11 @@ export default function RootLayout({
     <html lang="en">
       <body className="antialiased">
         <AuthProvider>
-          {children}
+          <ToastProvider>
+            <ConfirmProvider>
+              {children}
+            </ConfirmProvider>
+          </ToastProvider>
         </AuthProvider>
       </body>
     </html>

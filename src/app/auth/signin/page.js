@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
+import { useToast } from "../../../components/ui/toast";
 import "./animations.css";
 
 export default function SignIn() {
@@ -10,6 +11,7 @@ export default function SignIn() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const toast = useToast();
 
   console.log("🎯 SignIn component loaded!", new Date().toLocaleTimeString());
 
@@ -33,7 +35,7 @@ export default function SignIn() {
       if (response.ok) {
         const data = await response.json();
         console.log("✅ Login successful:", data);
-        setSuccess(`Welcome ${data.user.name}! Redirecting...`);
+        toast.success(`Welcome ${data.user.name}! Redirecting...`);
 
         setTimeout(() => {
           window.location.href = "/dashboard";
@@ -41,18 +43,18 @@ export default function SignIn() {
       } else {
         const errorData = await response.json();
         console.log("❌ Login failed:", errorData);
-        setError(errorData.error || "Login failed");
+        toast.error(errorData.error || "Login failed");
       }
     } catch (err) {
       console.error("💥 Network error:", err);
-      setError("Network error: " + err.message);
+      toast.error("Network error: " + err.message);
     }
 
     setLoading(false);
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-900">
       <div className="flex flex-col items-center justify-center min-h-screen p-4">
         <div className="w-full max-w-md mx-auto">
           {/* Logo section - Clean and Simple */}
@@ -84,7 +86,7 @@ export default function SignIn() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full px-4 py-3 border border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors bg-gray-700 text-white"
                 placeholder="Enter your email"
               />
             </div>
@@ -104,7 +106,7 @@ export default function SignIn() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 pr-12 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-4 py-3 pr-12 border border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors bg-gray-700 text-white"
                   placeholder="Enter your password"
                 />
                 <button

@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0a0a0a;
+  --foreground: #ededed;
 }
 
 @theme inline {
@@ -12,11 +12,15 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Force dark mode globally */
+html {
+  color-scheme: dark;
+}
+
+html.dark,
+html {
+  background-color: #0f172a;
+  color: #f1f5f9;
 }
 
 body {
@@ -83,7 +87,7 @@ a {
     border-color: #d1d5db !important;
   }
   
-  .print\:bg-gray-100 {
+  .print\:bg-gray-700 {
     background-color: #f3f4f6 !important;
   }
   
@@ -94,6 +98,27 @@ a {
   .print\:block {
     display: block !important;
   }
+}
+
+/* Dark theme for select dropdowns and options */
+select {
+  color-scheme: dark;
+}
+
+select option {
+  background-color: #374151 !important;
+  color: #ffffff !important;
+}
+
+select:focus option {
+  background-color: #4B5563 !important;
+  color: #ffffff !important;
+}
+
+select option:hover,
+select option:checked {
+  background-color: #6366f1 !important;
+  color: #ffffff !important;
 }
 
 /* Enhanced table styling for invoices */

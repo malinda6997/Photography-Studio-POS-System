@@ -6,9 +6,9 @@ const Button = forwardRef(
     const variants = {
       default: "bg-blue-600 text-white hover:bg-blue-700",
       outline:
-        "border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600",
-      ghost: "hover:bg-gray-100 text-gray-700",
-      link: "text-blue-600 underline-offset-4 hover:underline",
+        "border border-gray-600 bg-gray-700 text-gray-300 hover:bg-gray-600",
+      ghost: "hover:bg-gray-600 text-gray-300",
+      link: "text-blue-400 underline-offset-4 hover:underline",
     };
 
     const sizes = {

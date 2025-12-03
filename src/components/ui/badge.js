@@ -5,7 +5,7 @@ const Badge = forwardRef(
   ({ className, variant = "default", ...props }, ref) => {
     const variants = {
       default: "bg-blue-600 text-white",
-      secondary: "bg-gray-100 text-gray-900",
+      secondary: "bg-gray-700 text-gray-900",
       destructive: "bg-red-600 text-white",
       outline: "border border-gray-300 text-gray-700",
     };

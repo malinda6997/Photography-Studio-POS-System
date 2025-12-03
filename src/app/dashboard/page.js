@@ -191,12 +191,9 @@ export default function Dashboard() {
       <div className="animate-pulse">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {[1, 2, 3, 4].map((i) => (
-            <div
-              key={i}
-              className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow"
-            >
-              <div className="h-4 bg-gray-200 dark:bg-gray-600 rounded w-3/4 mb-4"></div>
-              <div className="h-8 bg-gray-200 dark:bg-gray-600 rounded w-1/2"></div>
+            <div key={i} className="bg-gray-800 p-6 rounded-lg shadow">
+              <div className="h-4 bg-gray-600 rounded w-3/4 mb-4"></div>
+              <div className="h-8 bg-gray-600 rounded w-1/2"></div>
             </div>
           ))}
         </div>
@@ -209,41 +206,37 @@ export default function Dashboard() {
   return (
     <Layout>
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
-          Dashboard
-        </h1>
-        <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
-          Welcome back, {user?.name}
-        </p>
+        <h1 className="text-2xl font-semibold text-white">Dashboard</h1>
+        <p className="mt-1 text-sm text-gray-300">Welcome back, {user?.name}</p>
       </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {/* Today's Income - Admin only */}
         {isAdmin && (
-          <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+          <div className="bg-gray-800 overflow-hidden shadow rounded-lg">
             <div className="p-5">
               <div className="flex items-center">
                 <div className="shrink-0">
-                  <CurrencyDollarIcon className="h-6 w-6 text-gray-400 dark:text-gray-300" />
+                  <CurrencyDollarIcon className="h-6 w-6 text-gray-300" />
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
+                    <dt className="text-sm font-medium text-gray-400 truncate">
                       Today&apos;s Income
                     </dt>
-                    <dd className="text-lg font-medium text-gray-900 dark:text-white">
+                    <dd className="text-lg font-medium text-white">
                       LKR {dashboardData.todayIncome.toLocaleString()}
                     </dd>
                   </dl>
                 </div>
               </div>
             </div>
-            <div className="bg-gray-50 dark:bg-gray-700 px-5 py-3">
+            <div className="bg-gray-700 px-5 py-3">
               <div className="text-sm">
                 <Link
                   href="/reports"
-                  className="font-medium text-indigo-700 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300"
+                  className="font-medium text-indigo-400 hover:text-indigo-300"
                 >
                   View reports
                 </Link>
@@ -253,29 +246,29 @@ export default function Dashboard() {
         )}
 
         {/* Pending Invoices */}
-        <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+        <div className="bg-gray-800 overflow-hidden shadow rounded-lg">
           <div className="p-5">
             <div className="flex items-center">
               <div className="shrink-0">
-                <DocumentTextIcon className="h-6 w-6 text-gray-400 dark:text-gray-300" />
+                <DocumentTextIcon className="h-6 w-6 text-gray-300" />
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
+                  <dt className="text-sm font-medium text-gray-400 truncate">
                     Pending Invoices
                   </dt>
-                  <dd className="text-lg font-medium text-gray-900 dark:text-white">
+                  <dd className="text-lg font-medium text-white">
                     {dashboardData.pendingInvoices}
                   </dd>
                 </dl>
               </div>
             </div>
           </div>
-          <div className="bg-gray-50 dark:bg-gray-700 px-5 py-3">
+          <div className="bg-gray-700 px-5 py-3">
             <div className="text-sm">
               <Link
                 href="/invoices?status=pending"
-                className="font-medium text-indigo-700 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 cursor-pointer transition-colors duration-200"
+                className="font-medium text-indigo-400 hover:text-indigo-300 cursor-pointer transition-colors duration-200"
               >
                 View all
               </Link>
@@ -284,7 +277,7 @@ export default function Dashboard() {
         </div>
 
         {/* Low Stock Items */}
-        <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+        <div className="bg-gray-800 overflow-hidden shadow rounded-lg">
           <div className="p-5">
             <div className="flex items-center">
               <div className="shrink-0">
@@ -292,17 +285,17 @@ export default function Dashboard() {
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
+                  <dt className="text-sm font-medium text-gray-400 truncate">
                     Low Stock Alert
                   </dt>
-                  <dd className="text-lg font-medium text-gray-900 dark:text-white">
+                  <dd className="text-lg font-medium text-white">
                     {dashboardData.lowStockItems.length} items
                   </dd>
                 </dl>
               </div>
             </div>
           </div>
-          <div className="bg-gray-50 dark:bg-gray-700 px-5 py-3">
+          <div className="bg-gray-700 px-5 py-3">
             <div className="text-sm">
               <Link
                 href="/frames?lowStock=true"
@@ -315,29 +308,29 @@ export default function Dashboard() {
         </div>
 
         {/* Quick Actions */}
-        <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+        <div className="bg-gray-800 overflow-hidden shadow rounded-lg">
           <div className="p-5">
             <div className="flex items-center">
               <div className="shrink-0">
-                <CubeIcon className="h-6 w-6 text-gray-400 dark:text-gray-300" />
+                <CubeIcon className="h-6 w-6 text-gray-300" />
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
+                  <dt className="text-sm font-medium text-gray-400 truncate">
                     Quick Actions
                   </dt>
-                  <dd className="text-lg font-medium text-gray-900 dark:text-white">
+                  <dd className="text-lg font-medium text-white">
                     Create Invoice
                   </dd>
                 </dl>
               </div>
             </div>
           </div>
-          <div className="bg-gray-50 dark:bg-gray-700 px-5 py-3">
+          <div className="bg-gray-700 px-5 py-3">
             <div className="text-sm">
               <Link
                 href="/invoices/create"
-                className="font-medium text-indigo-700 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 cursor-pointer transition-colors duration-200"
+                className="font-medium text-indigo-400 hover:text-indigo-300 cursor-pointer transition-colors duration-200"
               >
                 Get started
               </Link>
@@ -351,12 +344,12 @@ export default function Dashboard() {
         <>
           {/* Weekly Revenue Chart */}
           <div className="mb-8">
-            <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+            <div className="bg-gray-800 shadow rounded-lg p-6">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+                <h3 className="text-lg font-medium text-white">
                   Weekly Revenue Overview
                 </h3>
-                <ChartBarIcon className="h-6 w-6 text-gray-400 dark:text-gray-300" />
+                <ChartBarIcon className="h-6 w-6 text-gray-300" />
               </div>
 
               <div className="grid grid-cols-7 gap-2 mb-4">
@@ -384,7 +377,7 @@ export default function Dashboard() {
 
                   return (
                     <div key={index} className="flex flex-col items-center">
-                      <div className="text-xs text-gray-500 dark:text-gray-400 mb-1 text-center">
+                      <div className="text-xs text-gray-400 mb-1 text-center">
                         <div>{dayName}</div>
                         <div className="font-medium">{dateStr}</div>
                       </div>
@@ -393,7 +386,7 @@ export default function Dashboard() {
                         style={{ height: `${height}px`, minHeight: "20px" }}
                         title={`${dayName}, ${dateStr} - LKR ${amount.toLocaleString()}`}
                       ></div>
-                      <div className="text-xs text-gray-700 dark:text-gray-300 mt-1 font-medium">
+                      <div className="text-xs text-gray-300 mt-1 font-medium">
                         {(amount / 1000).toFixed(0)}k
                       </div>
                     </div>
@@ -403,10 +396,8 @@ export default function Dashboard() {
 
               <div className="border-t border-gray-200 dark:border-gray-600 pt-4">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-500 dark:text-gray-400">
-                    Weekly Total
-                  </span>
-                  <span className="font-medium text-gray-900 dark:text-white">
+                  <span className="text-gray-400">Weekly Total</span>
+                  <span className="font-medium text-white">
                     LKR{" "}
                     {dashboardData.weeklyIncome
                       .reduce((a, b) => a + b, 0)
@@ -419,7 +410,7 @@ export default function Dashboard() {
 
           {/* Monthly Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+            <div className="bg-gray-800 overflow-hidden shadow rounded-lg">
               <div className="p-5">
                 <div className="flex items-center">
                   <div className="shrink-0">
@@ -427,10 +418,10 @@ export default function Dashboard() {
                   </div>
                   <div className="ml-5 w-0 flex-1">
                     <dl>
-                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
+                      <dt className="text-sm font-medium text-gray-400 truncate">
                         Monthly Revenue
                       </dt>
-                      <dd className="text-lg font-medium text-gray-900 dark:text-white">
+                      <dd className="text-lg font-medium text-white">
                         LKR{" "}
                         {dashboardData.monthlyStats.totalRevenue.toLocaleString() ||
                           "850,000"}
@@ -441,7 +432,7 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+            <div className="bg-gray-800 overflow-hidden shadow rounded-lg">
               <div className="p-5">
                 <div className="flex items-center">
                   <div className="shrink-0">
@@ -449,10 +440,10 @@ export default function Dashboard() {
                   </div>
                   <div className="ml-5 w-0 flex-1">
                     <dl>
-                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
+                      <dt className="text-sm font-medium text-gray-400 truncate">
                         Total Orders
                       </dt>
-                      <dd className="text-lg font-medium text-gray-900 dark:text-white">
+                      <dd className="text-lg font-medium text-white">
                         {dashboardData.monthlyStats.totalInvoices || 156}
                       </dd>
                     </dl>
@@ -461,7 +452,7 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+            <div className="bg-gray-800 overflow-hidden shadow rounded-lg">
               <div className="p-5">
                 <div className="flex items-center">
                   <div className="shrink-0">
@@ -469,10 +460,10 @@ export default function Dashboard() {
                   </div>
                   <div className="ml-5 w-0 flex-1">
                     <dl>
-                      <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
+                      <dt className="text-sm font-medium text-gray-400 truncate">
                         Avg. Order Value
                       </dt>
-                      <dd className="text-lg font-medium text-gray-900 dark:text-white">
+                      <dd className="text-lg font-medium text-white">
                         LKR{" "}
                         {dashboardData.monthlyStats.averageOrderValue.toLocaleString() ||
                           "5,450"}
@@ -487,13 +478,13 @@ export default function Dashboard() {
           {/* Additional Admin Sections */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             {/* Recent Activity Feed */}
-            <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
+            <div className="bg-gray-800 shadow rounded-lg">
               <div className="px-4 py-5 sm:p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">
+                  <h3 className="text-lg leading-6 font-medium text-white">
                     Recent Activity
                   </h3>
-                  <ClockIcon className="h-6 w-6 text-gray-400 dark:text-gray-300" />
+                  <ClockIcon className="h-6 w-6 text-gray-300" />
                 </div>
 
                 <div className="space-y-4">
@@ -511,12 +502,10 @@ export default function Dashboard() {
                         }`}
                       ></div>
                       <div className="flex-1">
-                        <p className="text-sm font-medium text-gray-900 dark:text-white">
+                        <p className="text-sm font-medium text-white">
                           {activity.message}
                         </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                          {activity.time}
-                        </p>
+                        <p className="text-xs text-gray-400">{activity.time}</p>
                       </div>
                     </div>
                   ))}
@@ -534,13 +523,13 @@ export default function Dashboard() {
             </div>
 
             {/* Upcoming Bookings */}
-            <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
+            <div className="bg-gray-800 shadow rounded-lg">
               <div className="px-4 py-5 sm:p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">
+                  <h3 className="text-lg leading-6 font-medium text-white">
                     Upcoming Bookings
                   </h3>
-                  <CalendarDaysIcon className="h-6 w-6 text-gray-400 dark:text-gray-300" />
+                  <CalendarDaysIcon className="h-6 w-6 text-gray-300" />
                 </div>
 
                 <div className="space-y-3">
@@ -551,10 +540,10 @@ export default function Dashboard() {
                         className="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-600 last:border-b-0"
                       >
                         <div>
-                          <p className="text-sm font-medium text-gray-900 dark:text-white">
+                          <p className="text-sm font-medium text-white">
                             {booking.customerName || `Client ${index + 1}`}
                           </p>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
+                          <p className="text-sm text-gray-400">
                             {booking.service || "Portrait Session"} -{" "}
                             {booking.date || "Tomorrow 2:00 PM"}
                           </p>
@@ -571,10 +560,10 @@ export default function Dashboard() {
                     <>
                       <div className="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-600">
                         <div>
-                          <p className="text-sm font-medium text-gray-900 dark:text-white">
+                          <p className="text-sm font-medium text-white">
                             Sarah Johnson
                           </p>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
+                          <p className="text-sm text-gray-400">
                             Wedding Shoot - Tomorrow 10:00 AM
                           </p>
                         </div>
@@ -584,10 +573,10 @@ export default function Dashboard() {
                       </div>
                       <div className="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-600">
                         <div>
-                          <p className="text-sm font-medium text-gray-900 dark:text-white">
+                          <p className="text-sm font-medium text-white">
                             Mike Chen
                           </p>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
+                          <p className="text-sm text-gray-400">
                             Portrait Session - Dec 1, 3:00 PM
                           </p>
                         </div>
@@ -597,10 +586,10 @@ export default function Dashboard() {
                       </div>
                       <div className="flex items-center justify-between py-3">
                         <div>
-                          <p className="text-sm font-medium text-gray-900 dark:text-white">
+                          <p className="text-sm font-medium text-white">
                             Lisa Brown
                           </p>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
+                          <p className="text-sm text-gray-400">
                             Family Photo - Dec 3, 11:00 AM
                           </p>
                         </div>
@@ -625,13 +614,13 @@ export default function Dashboard() {
           </div>
 
           {/* Studio Performance Metrics */}
-          <div className="bg-white dark:bg-gray-800 shadow rounded-lg mb-8">
+          <div className="bg-gray-800 shadow rounded-lg mb-8">
             <div className="px-4 py-5 sm:p-6">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">
+                <h3 className="text-lg leading-6 font-medium text-white">
                   Studio Performance Overview
                 </h3>
-                <ChartBarIcon className="h-6 w-6 text-gray-400 dark:text-gray-300" />
+                <ChartBarIcon className="h-6 w-6 text-gray-300" />
               </div>
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -642,12 +631,10 @@ export default function Dashboard() {
                       94%
                     </span>
                   </div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">
+                  <p className="text-sm font-medium text-white">
                     Order Completion
                   </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
-                    This month
-                  </p>
+                  <p className="text-xs text-gray-400">This month</p>
                 </div>
 
                 {/* Response Time */}
@@ -657,12 +644,8 @@ export default function Dashboard() {
                       2.3h
                     </span>
                   </div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">
-                    Avg Response
-                  </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
-                    To inquiries
-                  </p>
+                  <p className="text-sm font-medium text-white">Avg Response</p>
+                  <p className="text-xs text-gray-400">To inquiries</p>
                 </div>
 
                 {/* Satisfaction */}
@@ -672,12 +655,8 @@ export default function Dashboard() {
                       4.8
                     </span>
                   </div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">
-                    Satisfaction
-                  </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
-                    Rating (5.0)
-                  </p>
+                  <p className="text-sm font-medium text-white">Satisfaction</p>
+                  <p className="text-xs text-gray-400">Rating (5.0)</p>
                 </div>
 
                 {/* Repeat Clients */}
@@ -687,18 +666,16 @@ export default function Dashboard() {
                       67%
                     </span>
                   </div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">
+                  <p className="text-sm font-medium text-white">
                     Repeat Clients
                   </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
-                    Return rate
-                  </p>
+                  <p className="text-xs text-gray-400">Return rate</p>
                 </div>
               </div>
 
               <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-600">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-500 dark:text-gray-400">
+                  <span className="text-sm text-gray-400">
                     Overall studio performance is excellent
                   </span>
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
@@ -714,9 +691,9 @@ export default function Dashboard() {
       {/* Recent Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Invoices */}
-        <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
+        <div className="bg-gray-800 shadow rounded-lg">
           <div className="px-4 py-5 sm:p-6">
-            <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4">
+            <h3 className="text-lg leading-6 font-medium text-white mb-4">
               Recent Invoices
             </h3>
             <div className="space-y-3">
@@ -727,10 +704,10 @@ export default function Dashboard() {
                     className="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-600 last:border-b-0"
                   >
                     <div>
-                      <p className="text-sm font-medium text-gray-900 dark:text-white">
+                      <p className="text-sm font-medium text-white">
                         {invoice.invoiceNo}
                       </p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                      <p className="text-sm text-gray-400">
                         {invoice.customer?.name} - LKR{" "}
                         {invoice.subtotal.toLocaleString()}
                       </p>
@@ -751,7 +728,7 @@ export default function Dashboard() {
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-4">
+                <p className="text-sm text-gray-400 text-center py-4">
                   No recent invoices
                 </p>
               )}
@@ -768,9 +745,9 @@ export default function Dashboard() {
         </div>
 
         {/* Low Stock Items */}
-        <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
+        <div className="bg-gray-800 shadow rounded-lg">
           <div className="px-4 py-5 sm:p-6">
-            <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4">
+            <h3 className="text-lg leading-6 font-medium text-white mb-4">
               Low Stock Items
             </h3>
             <div className="space-y-3">
@@ -781,12 +758,10 @@ export default function Dashboard() {
                     className="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-600 last:border-b-0"
                   >
                     <div>
-                      <p className="text-sm font-medium text-gray-900 dark:text-white">
+                      <p className="text-sm font-medium text-white">
                         {frame.name}
                       </p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
-                        {frame.category}
-                      </p>
+                      <p className="text-sm text-gray-400">{frame.category}</p>
                     </div>
                     <div className="text-right">
                       <span className="text-sm font-medium text-orange-600 dark:text-orange-400">
@@ -796,7 +771,7 @@ export default function Dashboard() {
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-4">
+                <p className="text-sm text-gray-400 text-center py-4">
                   All items are well stocked
                 </p>
               )}
