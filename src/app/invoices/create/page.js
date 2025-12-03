@@ -212,9 +212,9 @@ export default function CreateInvoicePage() {
       <div className="py-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-white">Create Invoice</h1>
+            <h1 className="text-3xl font-bold text-white">New Transaction</h1>
             <p className="mt-1 text-sm text-gray-400">
-              Generate a new invoice for customer orders
+              Process a new transaction for photography services and products
             </p>
           </div>
 

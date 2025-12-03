@@ -17,7 +17,7 @@ import {
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: HomeIcon },
-  { name: "Create Invoice", href: "/invoices/create", icon: DocumentTextIcon },
+  { name: "New Transaction", href: "/invoices/create", icon: DocumentTextIcon },
   { name: "Invoices", href: "/invoices", icon: DocumentTextIcon },
   { name: "Categories", href: "/categories", icon: TagIcon },
   { name: "Inventory", href: "/frames", icon: CubeIcon },
