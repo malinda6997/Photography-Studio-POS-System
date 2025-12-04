@@ -34,9 +34,9 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const login = async (email, password) => {
+  const login = async (username, password) => {
     console.log("🔐 AuthProvider login called with:", {
-      email,
+      username,
       passwordProvided: !!password,
     });
 
@@ -45,7 +45,7 @@ export function AuthProvider({ children }) {
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username, password }),
       });
 
       console.log("📥 API Response status:", response.status);
@@ -119,4 +119,3 @@ export const useAuth = () => {
   }
   return context;
 };
-

@@ -11,8 +11,8 @@ export async function POST() {
     console.log("Database connected successfully");
 
     // Check if users already exist
-    const existingAdmin = await User.findOne({ email: "admin@shine.com" });
-    const existingStaff = await User.findOne({ email: "staff@shine.com" });
+    const existingAdmin = await User.findOne({ username: "admin" });
+    const existingStaff = await User.findOne({ username: "staff" });
 
     const users = [];
 
@@ -20,6 +20,7 @@ export async function POST() {
       const adminPasswordHash = await bcrypt.hash("admin123", 12);
       users.push({
         name: "Admin User",
+        username: "admin",
         email: "admin@shine.com",
         passwordHash: adminPasswordHash,
         role: "admin",
@@ -30,6 +31,7 @@ export async function POST() {
       const staffPasswordHash = await bcrypt.hash("staff123", 12);
       users.push({
         name: "Staff User",
+        username: "staff",
         email: "staff@shine.com",
         passwordHash: staffPasswordHash,
         role: "staff",
@@ -43,6 +45,7 @@ export async function POST() {
         message: `Seeded ${users.length} users successfully`,
         users: users.map((user) => ({
           name: user.name,
+          username: user.username,
           email: user.email,
           role: user.role,
         })),
@@ -88,4 +91,3 @@ export async function GET() {
     );
   }
 }
-

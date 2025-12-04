@@ -30,9 +30,10 @@ export async function GET(request) {
       return NextResponse.json({
         user: {
           id: user._id.toString(),
-          email: user.email,
+          username: user.username,
           name: user.name,
           role: user.role,
+          email: user.email || null,
         },
       });
     } catch (dbError) {
@@ -41,9 +42,10 @@ export async function GET(request) {
       return NextResponse.json({
         user: {
           id: decoded.id,
-          email: decoded.email,
+          username: decoded.username,
           name: decoded.name,
           role: decoded.role,
+          email: decoded.email || null,
         },
       });
     }
@@ -52,4 +54,3 @@ export async function GET(request) {
     return NextResponse.json({ user: null });
   }
 }
-

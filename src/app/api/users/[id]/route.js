@@ -57,11 +57,11 @@ export async function PUT(request, { params }) {
       );
     }
 
-    const { name, email, role } = await request.json();
+    const { name, username, email, role } = await request.json();
 
-    if (!name || !email) {
+    if (!name || !username) {
       return NextResponse.json(
-        { error: "Name and email are required" },
+        { error: "Name and username are required" },
         { status: 400 }
       );
     }
@@ -73,7 +73,33 @@ export async function PUT(request, { params }) {
       );
     }
 
-    const updateData = { name, email };
+    // Check if username already exists (excluding current user)
+    const existingUser = await User.findOne({
+      username,
+      _id: { $ne: params.id },
+    });
+    if (existingUser) {
+      return NextResponse.json(
+        { error: "Username already exists" },
+        { status: 400 }
+      );
+    }
+
+    // Check if email already exists (only if provided, excluding current user)
+    if (email) {
+      const existingEmailUser = await User.findOne({
+        email,
+        _id: { $ne: params.id },
+      });
+      if (existingEmailUser) {
+        return NextResponse.json(
+          { error: "Email already exists" },
+          { status: 400 }
+        );
+      }
+    }
+
+    const updateData = { name, username, email: email || null };
     if (role) updateData.role = role;
 
     const user = await User.findByIdAndUpdate(params.id, updateData, {
@@ -89,8 +115,10 @@ export async function PUT(request, { params }) {
   } catch (error) {
     console.error("Update user error:", error);
     if (error.code === 11000) {
+      // Determine which field caused the duplicate error
+      const field = error.keyPattern?.username ? "Username" : "Email";
       return NextResponse.json(
-        { error: "Email already exists" },
+        { error: `${field} already exists` },
         { status: 400 }
       );
     }

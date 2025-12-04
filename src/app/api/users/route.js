@@ -56,11 +56,11 @@ export async function POST(request) {
       );
     }
 
-    const { name, email, password, role } = await request.json();
+    const { name, username, email, password, role } = await request.json();
 
-    if (!name || !email || !password) {
+    if (!name || !username || !password) {
       return NextResponse.json(
-        { error: "Name, email, and password are required" },
+        { error: "Name, username, and password are required" },
         { status: 400 }
       );
     }
@@ -72,17 +72,34 @@ export async function POST(request) {
       );
     }
 
-    // Check if user already exists
-    const existingUser = await User.findOne({ email });
+    // Check if username already exists
+    const existingUser = await User.findOne({ username });
     if (existingUser) {
       return NextResponse.json(
-        { error: "User with this email already exists" },
+        { error: "User with this username already exists" },
         { status: 400 }
       );
     }
 
+    // Check if email exists (only if provided)
+    if (email) {
+      const existingEmailUser = await User.findOne({ email });
+      if (existingEmailUser) {
+        return NextResponse.json(
+          { error: "User with this email already exists" },
+          { status: 400 }
+        );
+      }
+    }
+
     const passwordHash = await bcrypt.hash(password, 12);
-    const user = new User({ name, email, passwordHash, role });
+    const user = new User({
+      name,
+      username,
+      email: email || null,
+      passwordHash,
+      role,
+    });
     await user.save();
 
     // Return user without password
@@ -97,4 +114,3 @@ export async function POST(request) {
     );
   }
 }
-

@@ -17,6 +17,7 @@ export default function UsersManagement() {
   const [editingUser, setEditingUser] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
+    username: "",
     email: "",
     password: "",
     role: "staff",
@@ -86,7 +87,8 @@ export default function UsersManagement() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: formData.name,
-          email: formData.email,
+          username: formData.username,
+          email: formData.email || null,
           role: formData.role,
         }),
       });
@@ -137,14 +139,21 @@ export default function UsersManagement() {
   };
 
   const resetForm = () => {
-    setFormData({ name: "", email: "", password: "", role: "staff" });
+    setFormData({
+      name: "",
+      username: "",
+      email: "",
+      password: "",
+      role: "staff",
+    });
   };
 
   const openEditModal = (user) => {
     setEditingUser(user);
     setFormData({
       name: user.name,
-      email: user.email,
+      username: user.username,
+      email: user.email || "",
       password: "",
       role: user.role,
     });
@@ -185,6 +194,9 @@ export default function UsersManagement() {
                       Name
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Username
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Email
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -212,7 +224,10 @@ export default function UsersManagement() {
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                        {userData.email}
+                        {userData.username}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+                        {userData.email || "N/A"}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span
@@ -275,21 +290,37 @@ export default function UsersManagement() {
                     onChange={(e) =>
                       setFormData({ ...formData, name: e.target.value })
                     }
-                    className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 text-white bg-gray-700 text-white"
+                    className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 text-white"
                   />
                 </div>
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Email
+                    Username
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.username}
+                    onChange={(e) =>
+                      setFormData({ ...formData, username: e.target.value })
+                    }
+                    className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 text-white"
+                    minLength={3}
+                    placeholder="Enter username (min 3 characters)"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Email (Optional)
                   </label>
                   <input
                     type="email"
-                    required
                     value={formData.email}
                     onChange={(e) =>
                       setFormData({ ...formData, email: e.target.value })
                     }
                     className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 text-white"
+                    placeholder="Enter email address (optional)"
                   />
                 </div>
                 <div className="mb-4">
@@ -368,16 +399,31 @@ export default function UsersManagement() {
                 </div>
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Email
+                    Username
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.username}
+                    onChange={(e) =>
+                      setFormData({ ...formData, username: e.target.value })
+                    }
+                    className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 text-white"
+                    minLength={3}
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Email (Optional)
                   </label>
                   <input
                     type="email"
-                    required
                     value={formData.email}
                     onChange={(e) =>
                       setFormData({ ...formData, email: e.target.value })
                     }
                     className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 text-white"
+                    placeholder="Enter email address (optional)"
                   />
                 </div>
                 <div className="mb-6">
