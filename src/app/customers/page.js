@@ -569,13 +569,9 @@ export default function CustomersPage() {
                   </div>
                 </div>
                 <div className="bg-gray-700 p-4 rounded-lg">
-                  <div className="text-sm text-gray-400">
-                    Member Since
-                  </div>
+                  <div className="text-sm text-gray-400">Member Since</div>
                   <div className="text-lg font-bold text-white mt-1">
-                    {new Date(
-                      selectedCustomer.createdAt
-                    ).toLocaleDateString()}
+                    {new Date(selectedCustomer.createdAt).toLocaleDateString()}
                   </div>
                 </div>
               </div>
