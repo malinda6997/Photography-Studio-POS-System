@@ -14,6 +14,7 @@ import {
   Bars3Icon,
   XMarkIcon,
   UsersIcon,
+  InformationCircleIcon,
 } from "@heroicons/react/24/outline";
 
 const navigation = [
@@ -81,26 +82,43 @@ export default function Layout({ children }) {
             <div className="shrink-0 flex items-center px-4">
               <h1 className="text-white text-lg font-bold">Studio POS</h1>
             </div>
-            <nav className="mt-5 px-2 space-y-1">
-              {allNavigation.map((item) => {
-                const isActive =
-                  pathname === item.href || pathname.startsWith(item.href);
-                return (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className={`group flex items-center px-2 py-2 text-base font-medium rounded-md cursor-pointer transition-colors duration-200 ${
-                      isActive
-                        ? "bg-indigo-800 text-white"
-                        : "text-indigo-100 hover:bg-indigo-600 hover:text-white"
-                    }`}
-                    onClick={() => setSidebarOpen(false)}
-                  >
-                    <item.icon className="mr-4 h-6 w-6 text-indigo-300" />
-                    {item.name}
-                  </Link>
-                );
-              })}
+            <nav className="mt-5 px-2 space-y-1 flex flex-col h-full">
+              <div className="flex-1">
+                {allNavigation.map((item) => {
+                  const isActive =
+                    pathname === item.href || pathname.startsWith(item.href);
+                  return (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className={`group flex items-center px-2 py-2 text-base font-medium rounded-md cursor-pointer transition-colors duration-200 ${
+                        isActive
+                          ? "bg-indigo-800 text-white"
+                          : "text-indigo-100 hover:bg-indigo-600 hover:text-white"
+                      }`}
+                      onClick={() => setSidebarOpen(false)}
+                    >
+                      <item.icon className="mr-4 h-6 w-6 text-indigo-300" />
+                      {item.name}
+                    </Link>
+                  );
+                })}
+              </div>
+              {/* Support link at bottom */}
+              <div className="border-t border-indigo-600 pt-2 mt-2">
+                <Link
+                  href="/about"
+                  className={`group flex items-center px-2 py-2 text-base font-medium rounded-md cursor-pointer transition-colors duration-200 ${
+                    pathname === "/about"
+                      ? "bg-indigo-800 text-white"
+                      : "text-indigo-100 hover:bg-indigo-600 hover:text-white"
+                  }`}
+                  onClick={() => setSidebarOpen(false)}
+                >
+                  <InformationCircleIcon className="mr-4 h-6 w-6 text-indigo-300" />
+                  Support & About
+                </Link>
+              </div>
             </nav>
           </div>
         </div>
@@ -116,25 +134,41 @@ export default function Layout({ children }) {
               <div className="flex items-center shrink-0 px-4">
                 <h1 className="text-white text-xl font-bold">Studio POS</h1>
               </div>
-              <nav className="mt-5 flex-1 px-2 space-y-1">
-                {allNavigation.map((item) => {
-                  const isActive =
-                    pathname === item.href || pathname.startsWith(item.href);
-                  return (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md cursor-pointer transition-colors duration-200 ${
-                        isActive
-                          ? "bg-indigo-800 text-white"
-                          : "text-indigo-100 hover:bg-indigo-600 hover:text-white"
-                      }`}
-                    >
-                      <item.icon className="mr-3 h-6 w-6 text-indigo-300" />
-                      {item.name}
-                    </Link>
-                  );
-                })}
+              <nav className="mt-5 flex-1 px-2 space-y-1 flex flex-col">
+                <div className="flex-1">
+                  {allNavigation.map((item) => {
+                    const isActive =
+                      pathname === item.href || pathname.startsWith(item.href);
+                    return (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md cursor-pointer transition-colors duration-200 ${
+                          isActive
+                            ? "bg-indigo-800 text-white"
+                            : "text-indigo-100 hover:bg-indigo-600 hover:text-white"
+                        }`}
+                      >
+                        <item.icon className="mr-3 h-6 w-6 text-indigo-300" />
+                        {item.name}
+                      </Link>
+                    );
+                  })}
+                </div>
+                {/* Support link at bottom */}
+                <div className="border-t border-indigo-600 pt-2 mt-2">
+                  <Link
+                    href="/about"
+                    className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md cursor-pointer transition-colors duration-200 ${
+                      pathname === "/about"
+                        ? "bg-indigo-800 text-white"
+                        : "text-indigo-100 hover:bg-indigo-600 hover:text-white"
+                    }`}
+                  >
+                    <InformationCircleIcon className="mr-3 h-6 w-6 text-indigo-300" />
+                    Support & About
+                  </Link>
+                </div>
               </nav>
             </div>
           </div>

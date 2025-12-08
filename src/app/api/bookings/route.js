@@ -62,6 +62,7 @@ export async function POST(request) {
       advancePaid = 0,
       notes,
       invoiceRef,
+      status = "scheduled",
     } = body;
 
     if (!customerId || !bookingDate || !slotTime) {
@@ -101,6 +102,7 @@ export async function POST(request) {
       advancePaid,
       notes,
       invoiceRef,
+      status,
     });
 
     await booking.save();
@@ -120,4 +122,3 @@ export async function POST(request) {
     );
   }
 }
-

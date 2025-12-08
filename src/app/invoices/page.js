@@ -54,7 +54,8 @@ export default function InvoicesPage() {
     };
 
     fetchInvoices();
-  }, [search, statusFilter, pagination.current]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search, statusFilter]);
 
   const getStatusBadge = (status) => {
     const colors = {
