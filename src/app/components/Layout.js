@@ -13,6 +13,7 @@ import {
   TagIcon,
   Bars3Icon,
   XMarkIcon,
+  UsersIcon,
 } from "@heroicons/react/24/outline";
 
 const navigation = [
@@ -26,8 +27,9 @@ const navigation = [
 ];
 
 const adminNavigation = [
+  { name: "Customers", href: "/customers", icon: UserGroupIcon },
   { name: "Reports", href: "/reports", icon: ChartBarIcon },
-  { name: "Users", href: "/users", icon: UserGroupIcon },
+  { name: "Users", href: "/users", icon: UsersIcon },
 ];
 
 export default function Layout({ children }) {
