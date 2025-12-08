@@ -16,8 +16,8 @@ export async function GET(request) {
 
     // Fetch fresh user data from database to get latest updates
     try {
-      const dbConnect = (await import("../../../../lib/dbConnect")).default;
-      const User = (await import("../../../../models/User")).default;
+      const dbConnect = (await import("../../../../../lib/dbConnect")).default;
+      const User = (await import("../../../../../models/User")).default;
 
       await dbConnect();
 

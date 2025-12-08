@@ -1,37 +1,31 @@
 import { NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
-
-// Mock database for categories - in production, use MongoDB
-let categories = [
-  { _id: "1", name: "Portrait Photography", price: 5000 },
-  { _id: "2", name: "Wedding Photography", price: 15000 },
-  { _id: "3", name: "Event Photography", price: 8000 },
-  { _id: "4", name: "Product Photography", price: 3000 },
-];
-
-let nextId = 5;
-
-// Verify JWT token
-function verifyToken(request) {
-  try {
-    const token = request.cookies.get("auth-token")?.value;
-    if (!token) {
-      return null;
-    }
-    return jwt.verify(token, process.env.JWT_SECRET);
-  } catch (error) {
-    return null;
-  }
-}
+import dbConnect from "../../../../lib/dbConnect";
+import Category from "../../../../models/Category";
+import { requireAuth } from "../../../../lib/auth";
 
 // GET - Fetch all categories
 export async function GET(request) {
+  const user = await requireAuth(request);
+  if (user instanceof NextResponse) return user;
+
+  await dbConnect();
+
   try {
-    const user = verifyToken(request);
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const { searchParams } = new URL(request.url);
+    const search = searchParams.get("search");
+    const activeOnly = searchParams.get("activeOnly");
+
+    let query = {};
+
+    if (search) {
+      query.name = { $regex: search, $options: "i" };
     }
 
+    if (activeOnly === "true") {
+      query.isActive = true;
+    }
+
+    const categories = await Category.find(query).sort({ name: 1 });
     return NextResponse.json(categories);
   } catch (error) {
     console.error("Categories GET error:", error);
@@ -44,14 +38,14 @@ export async function GET(request) {
 
 // POST - Create new category
 export async function POST(request) {
-  try {
-    const user = verifyToken(request);
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+  const user = await requireAuth(request);
+  if (user instanceof NextResponse) return user;
 
+  await dbConnect();
+
+  try {
     const body = await request.json();
-    const { name, price } = body;
+    const { name, price, description } = body;
 
     if (!name || price === undefined) {
       return NextResponse.json(
@@ -61,9 +55,10 @@ export async function POST(request) {
     }
 
     // Check if category name already exists
-    const existingCategory = categories.find(
-      (cat) => cat.name.toLowerCase() === name.toLowerCase()
-    );
+    const existingCategory = await Category.findOne({
+      name: { $regex: `^${name}$`, $options: "i" },
+    });
+
     if (existingCategory) {
       return NextResponse.json(
         { error: "Category name already exists" },
@@ -71,18 +66,37 @@ export async function POST(request) {
       );
     }
 
-    const newCategory = {
-      _id: nextId.toString(),
-      name,
+    const categoryData = {
+      name: name.trim(),
       price: parseFloat(price),
+      description: description?.trim() || "",
     };
-    nextId++;
 
-    categories.push(newCategory);
+    const category = new Category(categoryData);
+    await category.save();
 
-    return NextResponse.json(newCategory, { status: 201 });
+    console.log("✅ Category created successfully:", {
+      name: category.name,
+      price: category.price,
+    });
+
+    return NextResponse.json(category, { status: 201 });
   } catch (error) {
     console.error("Categories POST error:", error);
+    if (error.code === 11000) {
+      return NextResponse.json(
+        { error: "Category name already exists" },
+        { status: 400 }
+      );
+    } else if (error.name === "ValidationError") {
+      const validationErrors = Object.values(error.errors).map(
+        (err) => err.message
+      );
+      return NextResponse.json(
+        { error: validationErrors.join(", ") },
+        { status: 400 }
+      );
+    }
     return NextResponse.json(
       { error: "Failed to create category" },
       { status: 500 }
@@ -92,14 +106,14 @@ export async function POST(request) {
 
 // PUT - Update category
 export async function PUT(request) {
-  try {
-    const user = verifyToken(request);
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+  const user = await requireAuth(request);
+  if (user instanceof NextResponse) return user;
 
+  await dbConnect();
+
+  try {
     const body = await request.json();
-    const { _id, name, price } = body;
+    const { _id, name, price, description, isActive } = body;
 
     if (!_id || !name || price === undefined) {
       return NextResponse.json(
@@ -108,18 +122,12 @@ export async function PUT(request) {
       );
     }
 
-    const categoryIndex = categories.findIndex((cat) => cat._id === _id);
-    if (categoryIndex === -1) {
-      return NextResponse.json(
-        { error: "Category not found" },
-        { status: 404 }
-      );
-    }
-
     // Check if new name conflicts with existing category (excluding current one)
-    const existingCategory = categories.find(
-      (cat) => cat.name.toLowerCase() === name.toLowerCase() && cat._id !== _id
-    );
+    const existingCategory = await Category.findOne({
+      name: { $regex: `^${name}$`, $options: "i" },
+      _id: { $ne: _id },
+    });
+
     if (existingCategory) {
       return NextResponse.json(
         { error: "Category name already exists" },
@@ -127,15 +135,51 @@ export async function PUT(request) {
       );
     }
 
-    categories[categoryIndex] = {
-      ...categories[categoryIndex],
-      name,
+    const updateData = {
+      name: name.trim(),
       price: parseFloat(price),
+      description: description?.trim() || "",
+      updatedAt: new Date(),
     };
 
-    return NextResponse.json(categories[categoryIndex]);
+    if (isActive !== undefined) {
+      updateData.isActive = isActive;
+    }
+
+    const category = await Category.findByIdAndUpdate(_id, updateData, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!category) {
+      return NextResponse.json(
+        { error: "Category not found" },
+        { status: 404 }
+      );
+    }
+
+    console.log("✅ Category updated successfully:", {
+      name: category.name,
+      price: category.price,
+    });
+
+    return NextResponse.json(category);
   } catch (error) {
     console.error("Categories PUT error:", error);
+    if (error.code === 11000) {
+      return NextResponse.json(
+        { error: "Category name already exists" },
+        { status: 400 }
+      );
+    } else if (error.name === "ValidationError") {
+      const validationErrors = Object.values(error.errors).map(
+        (err) => err.message
+      );
+      return NextResponse.json(
+        { error: validationErrors.join(", ") },
+        { status: 400 }
+      );
+    }
     return NextResponse.json(
       { error: "Failed to update category" },
       { status: 500 }
@@ -145,12 +189,12 @@ export async function PUT(request) {
 
 // DELETE - Delete category
 export async function DELETE(request) {
-  try {
-    const user = verifyToken(request);
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+  const user = await requireAuth(request);
+  if (user instanceof NextResponse) return user;
 
+  await dbConnect();
+
+  try {
     const url = new URL(request.url);
     const id = url.searchParams.get("id");
 
@@ -161,17 +205,21 @@ export async function DELETE(request) {
       );
     }
 
-    const categoryIndex = categories.findIndex((cat) => cat._id === id);
-    if (categoryIndex === -1) {
+    const category = await Category.findByIdAndDelete(id);
+
+    if (!category) {
       return NextResponse.json(
         { error: "Category not found" },
         { status: 404 }
       );
     }
 
-    categories.splice(categoryIndex, 1);
+    console.log("✅ Category deleted successfully:", category.name);
 
-    return NextResponse.json({ message: "Category deleted successfully" });
+    return NextResponse.json({
+      message: "Category deleted successfully",
+      deletedCategory: category,
+    });
   } catch (error) {
     console.error("Categories DELETE error:", error);
     return NextResponse.json(
