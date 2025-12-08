@@ -4,7 +4,7 @@ import Payment from "../../../../../models/Payment";
 import Expense from "../../../../../models/Expense";
 import Invoice from "../../../../../models/Invoice";
 import Frame from "../../../../../models/Frame";
-import { requireAdmin } from "../../../lib/auth";
+import { requireAdmin } from "../../../../lib/auth";
 
 export async function GET(request) {
   const user = await requireAdmin(request);
