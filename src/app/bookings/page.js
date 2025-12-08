@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useAuth } from "../components/AuthProvider";
+import { useToast } from "../../components/ui/toast";
+import { useConfirm } from "../../components/ui/confirm";
 import Layout from "../components/Layout";
 import {
   PlusIcon,
@@ -14,6 +16,8 @@ import {
 
 export default function BookingsPage() {
   const { user } = useAuth();
+  const toast = useToast();
+  const { confirm } = useConfirm();
   const [bookings, setBookings] = useState([]);
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -31,7 +35,7 @@ export default function BookingsPage() {
     serviceType: "portrait",
     duration: 60,
     notes: "",
-    status: "confirmed",
+    status: "scheduled",
   });
 
   useEffect(() => {
@@ -70,46 +74,88 @@ export default function BookingsPage() {
     e.preventDefault();
 
     try {
+      // If no customer is selected, try to find or create one
+      let customerId = formData.customerId;
+
+      if (!customerId && formData.customerMobile) {
+        // Try to find existing customer by mobile
+        const existingCustomer = customers.find(
+          (c) => c.mobile === formData.customerMobile
+        );
+
+        if (existingCustomer) {
+          customerId = existingCustomer._id;
+        } else {
+          // Create new customer
+          const customerResponse = await fetch("/api/customers", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name: formData.customerName,
+              mobile: formData.customerMobile,
+            }),
+          });
+
+          if (customerResponse.ok) {
+            const newCustomer = await customerResponse.json();
+            customerId = newCustomer._id;
+            await fetchCustomers();
+          } else {
+            toast.error("Failed to create customer");
+            return;
+          }
+        }
+      }
+
       const url = editingBooking
         ? `/api/bookings/${editingBooking._id}`
         : "/api/bookings";
       const method = editingBooking ? "PUT" : "POST";
 
+      // Map form data to API expected format
+      const bookingData = {
+        customerId: customerId,
+        bookingDate: formData.appointmentDate,
+        slotTime: formData.appointmentTime,
+        notes: formData.notes || "",
+        status: formData.status || "scheduled",
+      };
+
       const response = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(bookingData),
       });
 
       if (response.ok) {
         await fetchBookings();
         handleCloseForm();
-        alert(
+        toast.success(
           editingBooking
             ? "Booking updated successfully!"
             : "Booking created successfully!"
         );
       } else {
         const error = await response.json();
-        alert(error.error || "Failed to save booking");
+        toast.error(error.error || "Failed to save booking");
       }
     } catch (error) {
       console.error("Save booking error:", error);
-      alert("Failed to save booking");
+      toast.error("Failed to save booking");
     }
   };
 
   const handleEdit = (booking) => {
     setFormData({
       customerId: booking.customer?._id || "",
-      customerName: booking.customerName,
-      customerMobile: booking.customerMobile,
-      appointmentDate: new Date(booking.appointmentDate)
+      customerName: booking.customer?.name || "",
+      customerMobile: booking.customer?.mobile || "",
+      appointmentDate: new Date(booking.bookingDate)
         .toISOString()
         .split("T")[0],
-      appointmentTime: booking.appointmentTime,
-      serviceType: booking.serviceType,
-      duration: booking.duration,
+      appointmentTime: booking.slotTime,
+      serviceType: "portrait",
+      duration: 60,
       notes: booking.notes || "",
       status: booking.status,
     });
@@ -118,7 +164,13 @@ export default function BookingsPage() {
   };
 
   const handleDelete = async (bookingId) => {
-    if (!confirm("Are you sure you want to delete this booking?")) return;
+    const confirmed = await confirm({
+      title: "Delete Booking",
+      description:
+        "Are you sure you want to delete this booking? This action cannot be undone.",
+    });
+
+    if (!confirmed) return;
 
     try {
       const response = await fetch(`/api/bookings/${bookingId}`, {
@@ -127,14 +179,14 @@ export default function BookingsPage() {
 
       if (response.ok) {
         await fetchBookings();
-        alert("Booking deleted successfully!");
+        toast.success("Booking deleted successfully!");
       } else {
         const error = await response.json();
-        alert(error.error || "Failed to delete booking");
+        toast.error(error.error || "Failed to delete booking");
       }
     } catch (error) {
       console.error("Delete booking error:", error);
-      alert("Failed to delete booking");
+      toast.error("Failed to delete booking");
     }
   };
 
@@ -148,13 +200,14 @@ export default function BookingsPage() {
 
       if (response.ok) {
         await fetchBookings();
+        toast.success("Booking status updated successfully!");
       } else {
         const error = await response.json();
-        alert(error.error || "Failed to update booking status");
+        toast.error(error.error || "Failed to update booking status");
       }
     } catch (error) {
       console.error("Update booking error:", error);
-      alert("Failed to update booking status");
+      toast.error("Failed to update booking status");
     }
   };
 
@@ -189,39 +242,39 @@ export default function BookingsPage() {
       serviceType: "portrait",
       duration: 60,
       notes: "",
-      status: "confirmed",
+      status: "scheduled",
     });
   };
 
   const filteredBookings = bookings.filter((booking) => {
+    const customerName = booking.customer?.name || "";
+    const customerMobile = booking.customer?.mobile || "";
+
     const matchesSearch =
-      booking.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      booking.customerMobile.includes(searchTerm) ||
-      booking.serviceType.toLowerCase().includes(searchTerm.toLowerCase());
+      customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      customerMobile.includes(searchTerm) ||
+      booking.notes?.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesStatus =
       filterStatus === "all" || booking.status === filterStatus;
 
     const matchesDate =
       !filterDate ||
-      new Date(booking.appointmentDate).toISOString().split("T")[0] ===
-        filterDate;
+      new Date(booking.bookingDate).toISOString().split("T")[0] === filterDate;
 
     return matchesSearch && matchesStatus && matchesDate;
   });
 
   const getStatusColor = (status) => {
     switch (status) {
-      case "confirmed":
+      case "scheduled":
         return "bg-green-100 text-green-800";
-      case "pending":
-        return "bg-yellow-100 text-yellow-800";
       case "completed":
         return "bg-blue-100 text-blue-800";
       case "cancelled":
         return "bg-red-100 text-red-800";
       default:
-        return "bg-gray-700 text-gray-800";
+        return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -280,8 +333,7 @@ export default function BookingsPage() {
                 className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               >
                 <option value="all">All Status</option>
-                <option value="pending">Pending</option>
-                <option value="confirmed">Confirmed</option>
+                <option value="scheduled">Scheduled</option>
                 <option value="completed">Completed</option>
                 <option value="cancelled">Cancelled</option>
               </select>
@@ -330,10 +382,10 @@ export default function BookingsPage() {
                           <div className="ml-4">
                             <div className="flex items-center">
                               <p className="text-sm font-medium text-gray-900 dark:text-white">
-                                {booking.customerName}
+                                {booking.customer?.name || "N/A"}
                               </p>
                               <span
-                                className={`ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(
+                                className={`ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${getStatusColor(
                                   booking.status
                                 )}`}
                               >
@@ -342,13 +394,9 @@ export default function BookingsPage() {
                             </div>
                             <div className="flex items-center mt-1 text-sm text-gray-500">
                               <CalendarIcon className="h-4 w-4 mr-1" />
-                              {formatDate(booking.appointmentDate)}
+                              {formatDate(booking.bookingDate)}
                               <ClockIcon className="h-4 w-4 ml-4 mr-1" />
-                              {booking.appointmentTime}
-                              <span className="ml-4">•</span>
-                              <span className="ml-1 capitalize">
-                                {booking.serviceType}
-                              </span>
+                              {booking.slotTime}
                             </div>
                           </div>
                         </div>
@@ -358,10 +406,9 @@ export default function BookingsPage() {
                             onChange={(e) =>
                               handleStatusChange(booking._id, e.target.value)
                             }
-                            className="text-sm border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                            className="text-sm border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 capitalize"
                           >
-                            <option value="pending">Pending</option>
-                            <option value="confirmed">Confirmed</option>
+                            <option value="scheduled">Scheduled</option>
                             <option value="completed">Completed</option>
                             <option value="cancelled">Cancelled</option>
                           </select>
@@ -381,10 +428,8 @@ export default function BookingsPage() {
                       </div>
                       <div className="mt-2 text-sm text-gray-600">
                         <p>
-                          <strong>Mobile:</strong> {booking.customerMobile}
-                        </p>
-                        <p>
-                          <strong>Duration:</strong> {booking.duration} minutes
+                          <strong>Mobile:</strong>{" "}
+                          {booking.customer?.mobile || "N/A"}
                         </p>
                         {booking.notes && (
                           <p>
@@ -431,7 +476,7 @@ export default function BookingsPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="md:col-span-2">
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Customer
+                        Select Existing Customer (Optional)
                       </label>
                       <select
                         value={formData.customerId}
@@ -439,7 +484,7 @@ export default function BookingsPage() {
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                       >
                         <option value="">
-                          Select existing customer or enter new details below
+                          -- Select customer or enter new details below --
                         </option>
                         {customers.map((customer) => (
                           <option key={customer._id} value={customer._id}>
@@ -487,7 +532,7 @@ export default function BookingsPage() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Appointment Date *
+                        Booking Date *
                       </label>
                       <input
                         type="date"
@@ -505,7 +550,7 @@ export default function BookingsPage() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Appointment Time *
+                        Time Slot *
                       </label>
                       <input
                         type="time"
@@ -523,54 +568,6 @@ export default function BookingsPage() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Service Type *
-                      </label>
-                      <select
-                        value={formData.serviceType}
-                        onChange={(e) =>
-                          setFormData((prev) => ({
-                            ...prev,
-                            serviceType: e.target.value,
-                          }))
-                        }
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                        required
-                      >
-                        <option value="portrait">Portrait Session</option>
-                        <option value="wedding">Wedding Photography</option>
-                        <option value="event">Event Photography</option>
-                        <option value="family">Family Portraits</option>
-                        <option value="commercial">Commercial Shoot</option>
-                        <option value="other">Other</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Duration (minutes) *
-                      </label>
-                      <select
-                        value={formData.duration}
-                        onChange={(e) =>
-                          setFormData((prev) => ({
-                            ...prev,
-                            duration: parseInt(e.target.value),
-                          }))
-                        }
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                        required
-                      >
-                        <option value={30}>30 minutes</option>
-                        <option value={60}>1 hour</option>
-                        <option value={90}>1.5 hours</option>
-                        <option value={120}>2 hours</option>
-                        <option value={180}>3 hours</option>
-                        <option value={240}>4 hours</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
                         Status *
                       </label>
                       <select
@@ -584,8 +581,7 @@ export default function BookingsPage() {
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         required
                       >
-                        <option value="pending">Pending</option>
-                        <option value="confirmed">Confirmed</option>
+                        <option value="scheduled">Scheduled</option>
                         <option value="completed">Completed</option>
                         <option value="cancelled">Cancelled</option>
                       </select>
@@ -594,7 +590,7 @@ export default function BookingsPage() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Notes
+                      Notes (Optional)
                     </label>
                     <textarea
                       value={formData.notes}
@@ -634,4 +630,3 @@ export default function BookingsPage() {
     </Layout>
   );
 }
-

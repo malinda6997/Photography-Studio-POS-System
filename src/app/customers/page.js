@@ -46,6 +46,7 @@ export default function CustomersPage() {
       return;
     }
     fetchCustomers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const fetchCustomers = async () => {
@@ -331,7 +332,7 @@ export default function CustomersPage() {
                           <td className="px-6 py-4">
                             {customer.address ? (
                               <div className="flex items-start text-sm text-gray-300 max-w-xs">
-                                <MapPinIcon className="h-4 w-4 mr-1 mt-0.5 flex-shrink-0" />
+                                <MapPinIcon className="h-4 w-4 mr-1 mt-0.5 shrink-0" />
                                 <span className="line-clamp-2">
                                   {customer.address}
                                 </span>
