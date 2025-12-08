@@ -21,6 +21,7 @@ export default function Profile() {
   // Profile data state
   const [profileData, setProfileData] = useState({
     name: "",
+    username: "",
     email: "",
   });
 
@@ -44,13 +45,16 @@ export default function Profile() {
     if (user && !isUpdating) {
       console.log("Profile page - Syncing user data to form:", {
         userName: user.name,
+        userUsername: user.username,
         userEmail: user.email,
         currentFormName: profileData.name,
+        currentFormUsername: profileData.username,
         currentFormEmail: profileData.email,
         isUpdating,
       });
       setProfileData({
         name: user.name || "",
+        username: user.username || "",
         email: user.email || "",
       });
     }
@@ -67,6 +71,7 @@ export default function Profile() {
 
     console.log("Attempting to update profile:", {
       name: profileData.name,
+      username: profileData.username,
       email: profileData.email,
     });
 
@@ -79,6 +84,7 @@ export default function Profile() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: profileData.name,
+          username: profileData.username,
           email: profileData.email,
         }),
       });
@@ -254,7 +260,31 @@ export default function Profile() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-1">
-                    Email Address
+                    Username
+                    {user && (
+                      <span className="ml-2 text-xs text-gray-500">
+                        (Current in DB: "{user.username}")
+                      </span>
+                    )}
+                  </label>
+                  <input
+                    type="text"
+                    value={profileData.username}
+                    onChange={(e) =>
+                      setProfileData((prev) => ({
+                        ...prev,
+                        username: e.target.value,
+                      }))
+                    }
+                    className="w-full px-3 py-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-gray-700 text-white"
+                    required
+                    minLength={3}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
+                    Email Address (Optional)
                   </label>
                   <input
                     type="email"
@@ -266,7 +296,7 @@ export default function Profile() {
                       }))
                     }
                     className="w-full px-3 py-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-gray-700 text-white"
-                    required
+                    placeholder="Enter email address (optional)"
                   />
                 </div>
 

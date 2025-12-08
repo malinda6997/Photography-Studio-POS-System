@@ -10,22 +10,26 @@ import {
   ChartBarIcon,
   UserGroupIcon,
   UserIcon,
+  TagIcon,
   Bars3Icon,
   XMarkIcon,
+  UsersIcon,
 } from "@heroicons/react/24/outline";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: HomeIcon },
-  { name: "Create Invoice", href: "/invoices/create", icon: DocumentTextIcon },
+  { name: "New Transaction", href: "/invoices/create", icon: DocumentTextIcon },
   { name: "Invoices", href: "/invoices", icon: DocumentTextIcon },
-  { name: "Inventory", href: "/frames", icon: CubeIcon },
+  { name: "Categories", href: "/categories", icon: TagIcon },
+  { name: "Frames Stocks", href: "/frames", icon: CubeIcon },
   { name: "Bookings", href: "/bookings", icon: CalendarIcon },
   { name: "Profile", href: "/profile", icon: UserIcon },
 ];
 
 const adminNavigation = [
+  { name: "Customers", href: "/customers", icon: UserGroupIcon },
   { name: "Reports", href: "/reports", icon: ChartBarIcon },
-  { name: "Users", href: "/users", icon: UserGroupIcon },
+  { name: "Users", href: "/users", icon: UsersIcon },
 ];
 
 export default function Layout({ children }) {
@@ -189,4 +193,3 @@ export default function Layout({ children }) {
     </div>
   );
 }
-

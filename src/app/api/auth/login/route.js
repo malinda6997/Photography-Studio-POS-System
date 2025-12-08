@@ -8,16 +8,16 @@ export async function POST(request) {
   try {
     await dbConnect();
 
-    const { email, password } = await request.json();
+    const { username, password } = await request.json();
 
-    if (!email || !password) {
+    if (!username || !password) {
       return NextResponse.json(
-        { error: "Email and password are required" },
+        { error: "Username and password are required" },
         { status: 400 }
       );
     }
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ username });
     if (!user) {
       return NextResponse.json(
         { error: "Invalid credentials" },
@@ -36,7 +36,7 @@ export async function POST(request) {
     const token = jwt.sign(
       {
         id: user._id.toString(),
-        email: user.email,
+        username: user.username,
         name: user.name,
         role: user.role,
       },
@@ -47,9 +47,10 @@ export async function POST(request) {
     const response = NextResponse.json({
       user: {
         id: user._id.toString(),
-        email: user.email,
+        username: user.username,
         name: user.name,
         role: user.role,
+        email: user.email || null,
       },
     });
 
@@ -69,4 +70,3 @@ export async function POST(request) {
     );
   }
 }
-

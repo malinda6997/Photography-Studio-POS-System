@@ -5,7 +5,7 @@ import { useToast } from "../../../components/ui/toast";
 import "./animations.css";
 
 export default function SignIn() {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -27,7 +27,7 @@ export default function SignIn() {
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username, password }),
       });
 
       console.log("📥 Response status:", response.status);
@@ -72,22 +72,24 @@ export default function SignIn() {
 
           {/* Login form - Clean and Simple */}
           <form onSubmit={handleLogin} className="space-y-6">
-            {/* Email field */}
+            {/* Username field */}
             <div>
               <label
-                htmlFor="email"
+                htmlFor="username"
                 className="block text-sm font-medium text-gray-700 mb-2"
               >
-                Email Address
+                Username
               </label>
               <input
-                id="email"
-                type="email"
+                id="username"
+                type="text"
                 required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors bg-gray-700 text-white"
-                placeholder="Enter your email"
+                placeholder="Enter your username"
+                autoComplete="username"
+                minLength={3}
               />
             </div>
 
@@ -196,7 +198,7 @@ export default function SignIn() {
             {/* Login button */}
             <button
               type="submit"
-              disabled={loading || !email || !password}
+              disabled={loading || !username || !password}
               className="w-full text-white py-3 px-4 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
               style={{ backgroundColor: "#5D0CE8", focusRingColor: "#5D0CE8" }}
             >
