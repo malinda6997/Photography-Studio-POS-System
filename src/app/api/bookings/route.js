@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import dbConnect from "../../../../lib/dbConnect";
 import Booking from "../../../../models/Booking";
 import Customer from "../../../../models/Customer";
-import { requireAuth } from "../../../../lib/auth";
+import { requireAuth } from "../../../lib/auth";
 
 export async function GET(request) {
   const user = await requireAuth(request);

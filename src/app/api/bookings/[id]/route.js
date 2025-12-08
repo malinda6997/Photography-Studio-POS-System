@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import dbConnect from "../../../../../lib/dbConnect";
 import Booking from "../../../../../models/Booking";
-import { requireAuth } from "../../../../../lib/auth";
+import { requireAuth } from "../../../lib/auth";
 
 export async function PUT(request, { params }) {
   const user = await requireAuth(request);

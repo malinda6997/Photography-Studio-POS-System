@@ -9,7 +9,7 @@ import {
   generateInvoiceNumber,
   calculatePaymentStatus,
 } from "../../../../lib/server-utils";
-import { requireAuth } from "../../../../lib/auth";
+import { requireAuth } from "../../../lib/auth";
 
 export async function GET(request) {
   console.log("📋 GET /api/invoices - Request received");
