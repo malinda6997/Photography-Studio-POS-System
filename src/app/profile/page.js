@@ -238,11 +238,6 @@ export default function Profile() {
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-1">
                     Full Name
-                    {user && (
-                      <span className="ml-2 text-xs text-gray-500">
-                        (Current in DB: "{user.name}")
-                      </span>
-                    )}
                   </label>
                   <input
                     type="text"
@@ -261,11 +256,6 @@ export default function Profile() {
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-1">
                     Username
-                    {user && (
-                      <span className="ml-2 text-xs text-gray-500">
-                        (Current in DB: "{user.username}")
-                      </span>
-                    )}
                   </label>
                   <input
                     type="text"
