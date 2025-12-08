@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useAuth } from "../components/AuthProvider";
+import { useToast } from "../../components/ui/toast";
+import { useConfirm } from "../../components/ui/confirm";
 import Layout from "../components/Layout";
 import {
   PlusIcon,
@@ -12,6 +14,8 @@ import {
 
 export default function FramesPage() {
   const { user } = useAuth();
+  const toast = useToast();
+  const { confirm } = useConfirm();
   const [frames, setFrames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -39,13 +43,19 @@ export default function FramesPage() {
   const fetchFrames = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/frames");
+      const response = await fetch("/api/frames", {
+        credentials: "include",
+      });
+
       if (response.ok) {
         const data = await response.json();
         setFrames(data);
+      } else {
+        toast.error("Failed to fetch frames");
       }
     } catch (error) {
       console.error("Failed to fetch frames:", error);
+      toast.error("Failed to fetch frames");
     } finally {
       setLoading(false);
     }
@@ -63,24 +73,25 @@ export default function FramesPage() {
       const response = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(formData),
       });
 
       if (response.ok) {
         await fetchFrames();
         handleCloseForm();
-        alert(
+        toast.success(
           editingFrame
             ? "Frame updated successfully!"
             : "Frame created successfully!"
         );
       } else {
         const error = await response.json();
-        alert(error.error || "Failed to save frame");
+        toast.error(error.error || "Failed to save frame");
       }
     } catch (error) {
       console.error("Save frame error:", error);
-      alert("Failed to save frame");
+      toast.error("Failed to save frame");
     }
   };
 
@@ -101,24 +112,33 @@ export default function FramesPage() {
     setShowForm(true);
   };
 
-  const handleDelete = async (frameId) => {
-    if (!confirm("Are you sure you want to delete this frame?")) return;
+  const handleDelete = async (frameId, frameName) => {
+    const confirmed = await confirm({
+      title: "Delete Frame",
+      message: `Are you sure you want to delete frame "${frameName}"? This action cannot be undone.`,
+      confirmText: "Delete",
+      cancelText: "Cancel",
+      type: "danger",
+    });
 
-    try {
-      const response = await fetch(`/api/frames/${frameId}`, {
-        method: "DELETE",
-      });
+    if (confirmed) {
+      try {
+        const response = await fetch(`/api/frames/${frameId}`, {
+          method: "DELETE",
+          credentials: "include",
+        });
 
-      if (response.ok) {
-        await fetchFrames();
-        alert("Frame deleted successfully!");
-      } else {
-        const error = await response.json();
-        alert(error.error || "Failed to delete frame");
+        if (response.ok) {
+          await fetchFrames();
+          toast.success(`Frame "${frameName}" deleted successfully`);
+        } else {
+          const error = await response.json();
+          toast.error(error.error || "Failed to delete frame");
+        }
+      } catch (error) {
+        console.error("Delete frame error:", error);
+        toast.error("Failed to delete frame");
       }
-    } catch (error) {
-      console.error("Delete frame error:", error);
-      alert("Failed to delete frame");
     }
   };
 
@@ -175,7 +195,7 @@ export default function FramesPage() {
           <div className="flex justify-between items-center mb-8">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                Frame Inventory
+                Frames Stocks
               </h1>
               <p className="mt-1 text-sm text-gray-600">
                 Manage your frame stock and pricing
@@ -279,7 +299,7 @@ export default function FramesPage() {
                             <PencilIcon className="h-5 w-5" />
                           </button>
                           <button
-                            onClick={() => handleDelete(frame._id)}
+                            onClick={() => handleDelete(frame._id, frame.name)}
                             className="text-red-600 hover:text-red-900"
                           >
                             <TrashIcon className="h-5 w-5" />
@@ -611,4 +631,3 @@ export default function FramesPage() {
     </Layout>
   );
 }
-

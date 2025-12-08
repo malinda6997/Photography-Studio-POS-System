@@ -20,7 +20,7 @@ const navigation = [
   { name: "New Transaction", href: "/invoices/create", icon: DocumentTextIcon },
   { name: "Invoices", href: "/invoices", icon: DocumentTextIcon },
   { name: "Categories", href: "/categories", icon: TagIcon },
-  { name: "Inventory", href: "/frames", icon: CubeIcon },
+  { name: "Frames Stocks", href: "/frames", icon: CubeIcon },
   { name: "Bookings", href: "/bookings", icon: CalendarIcon },
   { name: "Profile", href: "/profile", icon: UserIcon },
 ];

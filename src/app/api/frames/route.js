@@ -53,37 +53,68 @@ export async function POST(request) {
     const body = await request.json();
     const {
       name,
-      category,
+      type,
+      dimensions,
       unitPrice,
-      quantity,
+      stockQty,
+      minStockLevel,
+      material,
+      color,
       description,
-      lowStockThreshold,
+      isActive,
     } = body;
 
-    if (!name || !category || unitPrice == null || quantity == null) {
+    if (
+      !name ||
+      !type ||
+      !dimensions ||
+      unitPrice == null ||
+      stockQty == null
+    ) {
       return NextResponse.json(
-        { error: "Name, category, unit price, and quantity are required" },
+        {
+          error:
+            "Name, type, dimensions, unit price, and stock quantity are required",
+        },
         { status: 400 }
       );
     }
 
     const frame = new Frame({
       name,
-      category,
+      type,
+      dimensions,
       unitPrice,
-      quantity,
+      stockQty,
+      minStockLevel: minStockLevel || 5,
+      material,
+      color,
       description,
-      lowStockThreshold,
+      isActive: isActive !== undefined ? isActive : true,
     });
     await frame.save();
+
+    console.log("✅ Frame created successfully:", {
+      name: frame.name,
+      type: frame.type,
+      stockQty: frame.stockQty,
+    });
 
     return NextResponse.json(frame, { status: 201 });
   } catch (error) {
     console.error("Frame creation error:", error);
+    if (error.name === "ValidationError") {
+      const validationErrors = Object.values(error.errors).map(
+        (err) => err.message
+      );
+      return NextResponse.json(
+        { error: validationErrors.join(", ") },
+        { status: 400 }
+      );
+    }
     return NextResponse.json(
       { error: "Failed to create frame" },
       { status: 500 }
     );
   }
 }
-

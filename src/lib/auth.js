@@ -43,3 +43,25 @@ export function getUser(request) {
     return null;
   }
 }
+
+/**
+ * Verify JWT token and check if user is admin
+ * @param {Request} request - The incoming request
+ * @returns {Object|NextResponse} - User object or error response
+ */
+export async function requireAdmin(request) {
+  const user = await requireAuth(request);
+
+  if (user instanceof NextResponse) {
+    return user;
+  }
+
+  if (user.role !== "admin") {
+    return NextResponse.json(
+      { error: "Admin access required" },
+      { status: 403 }
+    );
+  }
+
+  return user;
+}

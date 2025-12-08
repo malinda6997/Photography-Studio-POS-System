@@ -179,7 +179,7 @@ export default function InvoicesPage() {
                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-600">
                   {invoices.length > 0 ? (
                     invoices.map((invoice) => (
-                      <tr key={invoice._id} className="hover:bg-gray-50">
+                      <tr key={invoice._id} className="hover:bg-gray-400">
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
                             <DocumentTextIcon className="h-5 w-5 text-gray-400 mr-2" />
@@ -332,4 +332,3 @@ export default function InvoicesPage() {
     </Layout>
   );
 }
-
