@@ -91,7 +91,10 @@ export default function IncomeCalculatorPage() {
         const incomes = await customIncomesRes.json();
         setCustomIncomes(incomes);
       } else {
-        console.error("Failed to fetch custom incomes:", await customIncomesRes.text());
+        console.error(
+          "Failed to fetch custom incomes:",
+          await customIncomesRes.text()
+        );
         setCustomIncomes([]);
       }
 
@@ -99,7 +102,10 @@ export default function IncomeCalculatorPage() {
         const expenses = await customExpensesRes.json();
         setCustomExpenses(expenses);
       } else {
-        console.error("Failed to fetch custom expenses:", await customExpensesRes.text());
+        console.error(
+          "Failed to fetch custom expenses:",
+          await customExpensesRes.text()
+        );
         setCustomExpenses([]);
       }
 

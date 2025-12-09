@@ -87,7 +87,7 @@ export async function POST(request) {
       amount,
       category,
       note,
-      createdBy: user._id,
+      createdBy: user.id,
     });
 
     await expense.save();

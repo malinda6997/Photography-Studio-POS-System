@@ -212,7 +212,7 @@ export async function POST(request) {
         balanceDue: parseFloat(balanceDue.toFixed(2)),
         totalPaid: parseFloat(actualAdvancePaid.toFixed(2)),
         paymentStatus,
-        createdBy: user._id,
+        createdBy: user.id,
         notes: notes || "",
         metadata: {
           hasDiscounts: totalDiscount > 0,
