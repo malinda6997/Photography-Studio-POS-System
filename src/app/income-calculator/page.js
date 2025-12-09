@@ -55,10 +55,10 @@ export default function IncomeCalculatorPage() {
     try {
       setLoading(true);
 
-      // Fetch system data (payments and expenses from system)
-      const [paymentsRes, expensesRes, customIncomesRes, customExpensesRes] =
+      // Fetch system data (invoices for income, expenses for outgoing)
+      const [invoicesRes, expensesRes, customIncomesRes, customExpensesRes] =
         await Promise.all([
-          fetch("/api/payments", { credentials: "include" }),
+          fetch("/api/invoices", { credentials: "include" }),
           fetch("/api/expenses", { credentials: "include" }),
           fetch("/api/income-calculator/incomes", { credentials: "include" }),
           fetch("/api/income-calculator/expenses", { credentials: "include" }),
@@ -67,20 +67,22 @@ export default function IncomeCalculatorPage() {
       let totalSystemIncome = 0;
       let totalSystemExpenses = 0;
 
-      if (paymentsRes.ok) {
-        const payments = await paymentsRes.json();
-        totalSystemIncome = payments.reduce(
-          (sum, payment) => sum + payment.amount,
+      if (invoicesRes.ok) {
+        const data = await invoicesRes.json();
+        const invoices = data.invoices || data || [];
+        // Calculate total income from all invoices (finalTotal is the invoice amount)
+        totalSystemIncome = invoices.reduce(
+          (sum, invoice) => sum + (invoice.finalTotal || 0),
           0
         );
       } else {
-        console.error("Failed to fetch payments:", await paymentsRes.text());
+        console.error("Failed to fetch invoices:", await invoicesRes.text());
       }
 
       if (expensesRes.ok) {
         const expenses = await expensesRes.json();
         totalSystemExpenses = expenses.reduce(
-          (sum, expense) => sum + expense.amount,
+          (sum, expense) => sum + (expense.amount || 0),
           0
         );
       } else {
@@ -303,7 +305,7 @@ export default function IncomeCalculatorPage() {
                     LKR {totalIncome.toLocaleString()}
                   </p>
                   <p className="text-green-100 text-xs mt-1">
-                    System: LKR {systemIncome.toLocaleString()} + Custom: LKR{" "}
+                    Invoices: LKR {systemIncome.toLocaleString()} + Other: LKR{" "}
                     {customIncomesTotal.toLocaleString()}
                   </p>
                 </div>
@@ -322,7 +324,7 @@ export default function IncomeCalculatorPage() {
                     LKR {totalExpenses.toLocaleString()}
                   </p>
                   <p className="text-red-100 text-xs mt-1">
-                    System: LKR {systemExpenses.toLocaleString()} + Custom: LKR{" "}
+                    Business: LKR {systemExpenses.toLocaleString()} + Other: LKR{" "}
                     {customExpensesTotal.toLocaleString()}
                   </p>
                 </div>
