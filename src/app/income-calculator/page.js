@@ -277,7 +277,7 @@ export default function IncomeCalculatorPage() {
           {/* Summary Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             {/* Total Income */}
-            <div className="bg-gradient-to-br from-green-600 to-green-700 rounded-lg shadow-lg p-6">
+            <div className="bg-linear-to-br from-green-600 to-green-700 rounded-lg shadow-lg p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-green-100 text-sm font-medium">
@@ -296,7 +296,7 @@ export default function IncomeCalculatorPage() {
             </div>
 
             {/* Total Expenses */}
-            <div className="bg-gradient-to-br from-red-600 to-red-700 rounded-lg shadow-lg p-6">
+            <div className="bg-linear-to-br from-red-600 to-red-700 rounded-lg shadow-lg p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-red-100 text-sm font-medium">
@@ -316,7 +316,7 @@ export default function IncomeCalculatorPage() {
 
             {/* Net Profit */}
             <div
-              className={`bg-gradient-to-br ${
+              className={`bg-linear-to-br ${
                 netProfit >= 0
                   ? "from-blue-600 to-blue-700"
                   : "from-orange-600 to-orange-700"
