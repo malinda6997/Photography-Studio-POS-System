@@ -31,7 +31,11 @@ const navigation = [
 const adminNavigation = [
   { name: "Customers", href: "/customers", icon: UserGroupIcon },
   { name: "Reports", href: "/reports", icon: ChartBarIcon },
-  { name: "Income Calculator", href: "/income-calculator", icon: CalculatorIcon },
+  {
+    name: "Income Calculator",
+    href: "/income-calculator",
+    icon: CalculatorIcon,
+  },
   { name: "Users", href: "/users", icon: UsersIcon },
 ];
 
