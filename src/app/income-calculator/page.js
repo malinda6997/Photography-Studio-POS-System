@@ -58,10 +58,10 @@ export default function IncomeCalculatorPage() {
       // Fetch system data (payments and expenses from system)
       const [paymentsRes, expensesRes, customIncomesRes, customExpensesRes] =
         await Promise.all([
-          fetch("/api/payments"),
-          fetch("/api/expenses"),
-          fetch("/api/income-calculator/incomes"),
-          fetch("/api/income-calculator/expenses"),
+          fetch("/api/payments", { credentials: "include" }),
+          fetch("/api/expenses", { credentials: "include" }),
+          fetch("/api/income-calculator/incomes", { credentials: "include" }),
+          fetch("/api/income-calculator/expenses", { credentials: "include" }),
         ]);
 
       let totalSystemIncome = 0;
@@ -73,6 +73,8 @@ export default function IncomeCalculatorPage() {
           (sum, payment) => sum + payment.amount,
           0
         );
+      } else {
+        console.error("Failed to fetch payments:", await paymentsRes.text());
       }
 
       if (expensesRes.ok) {
@@ -81,16 +83,24 @@ export default function IncomeCalculatorPage() {
           (sum, expense) => sum + expense.amount,
           0
         );
+      } else {
+        console.error("Failed to fetch expenses:", await expensesRes.text());
       }
 
       if (customIncomesRes.ok) {
         const incomes = await customIncomesRes.json();
         setCustomIncomes(incomes);
+      } else {
+        console.error("Failed to fetch custom incomes:", await customIncomesRes.text());
+        setCustomIncomes([]);
       }
 
       if (customExpensesRes.ok) {
         const expenses = await customExpensesRes.json();
         setCustomExpenses(expenses);
+      } else {
+        console.error("Failed to fetch custom expenses:", await customExpensesRes.text());
+        setCustomExpenses([]);
       }
 
       setSystemIncome(totalSystemIncome);
