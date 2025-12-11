@@ -63,7 +63,12 @@ export async function POST(request) {
       maxAge: 86400, // 24 hours
     });
 
-    console.log("🍪 Cookie set for user:", user.username, "Token length:", token.length);
+    console.log(
+      "🍪 Cookie set for user:",
+      user.username,
+      "Token length:",
+      token.length
+    );
 
     return response;
   } catch (error) {
