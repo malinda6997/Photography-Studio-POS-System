@@ -52,9 +52,10 @@ export async function POST(request) {
         role: user.role,
         email: user.email || null,
       },
+      token: token, // Also send token in response for debugging
     });
 
-    // Set cookie with explicit path
+    // Set cookie with explicit path and domain
     response.cookies.set("auth-token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -67,7 +68,9 @@ export async function POST(request) {
       "🍪 Cookie set for user:",
       user.username,
       "Token length:",
-      token.length
+      token.length,
+      "Environment:",
+      process.env.NODE_ENV
     );
 
     return response;

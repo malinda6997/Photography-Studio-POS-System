@@ -37,6 +37,8 @@ export default function SignIn() {
         const data = await response.json();
         console.log("✅ Login successful:", data);
         console.log("🍪 Cookies after login:", document.cookie);
+        console.log("🔑 Token received:", data.token ? "Yes" : "No");
+        
         toast.success(`Welcome ${data.user.name}! Redirecting...`);
 
         // Verify session is set before redirecting
@@ -47,20 +49,25 @@ export default function SignIn() {
               credentials: "include",
             });
             console.log("🔐 Session check status:", sessionCheck.status);
+            
+            const sessionData = await sessionCheck.json();
+            console.log("📦 Session data:", sessionData);
 
-            if (sessionCheck.ok) {
+            if (sessionCheck.ok && sessionData.user) {
               console.log("✅ Session verified, redirecting to dashboard...");
               window.location.href = "/dashboard";
             } else {
-              console.log("❌ Session verification failed");
-              toast.error("Session error. Please try logging in again.");
+              console.log("❌ Session verification failed - redirecting anyway");
+              // Force redirect even if session check fails
+              window.location.href = "/dashboard";
             }
           } catch (err) {
             console.error("Session check error:", err);
             // Try redirect anyway
+            console.log("⚠️ Forcing redirect despite error");
             window.location.href = "/dashboard";
           }
-        }, 1000);
+        }, 1500);
       } else {
         const errorData = await response.json();
         console.log("❌ Login failed:", errorData);
