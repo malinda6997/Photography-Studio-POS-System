@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, Suspense } from "react";
 import { useAuth } from "../../components/AuthProvider";
 import { useToast } from "../../../components/ui/toast";
 import Layout from "../../components/Layout";
@@ -14,7 +14,7 @@ import {
   CalculatorIcon,
 } from "@heroicons/react/24/outline";
 
-export default function CreateInvoicePage() {
+function CreateInvoiceContent() {
   const { user } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -974,5 +974,24 @@ export default function CreateInvoicePage() {
         </div>
       </div>
     </Layout>
+  );
+}
+
+export default function CreateInvoicePage() {
+  return (
+    <Suspense
+      fallback={
+        <Layout>
+          <div className="flex items-center justify-center h-screen">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+              <p className="mt-4 text-gray-600">Loading invoice form...</p>
+            </div>
+          </div>
+        </Layout>
+      }
+    >
+      <CreateInvoiceContent />
+    </Suspense>
   );
 }
