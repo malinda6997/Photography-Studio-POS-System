@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../components/AuthProvider";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   CurrencyDollarIcon,
@@ -12,12 +13,18 @@ import {
   UserGroupIcon,
   CalendarDaysIcon,
   ClockIcon,
+  PlusCircleIcon,
+  BanknotesIcon,
+  UserPlusIcon,
+  CalendarIcon,
+  XMarkIcon,
 } from "@heroicons/react/24/outline";
 
 import Layout from "../components/Layout";
 
 export default function Dashboard() {
   const { user, loading: authLoading } = useAuth();
+  const router = useRouter();
   const [dashboardData, setDashboardData] = useState({
     todayIncome: 0,
     pendingInvoices: 0,
@@ -32,8 +39,13 @@ export default function Dashboard() {
     },
     recentActivity: [],
     upcomingBookings: [],
+    todayCustomers: 0,
+    totalFrameStock: 0,
   });
   const [loading, setLoading] = useState(true);
+  const [showQuickInvoiceModal, setShowQuickInvoiceModal] = useState(false);
+  const [customers, setCustomers] = useState([]);
+  const [quickInvoiceCustomer, setQuickInvoiceCustomer] = useState("");
 
   const fetchDashboardData = useCallback(async () => {
     try {
@@ -49,6 +61,7 @@ export default function Dashboard() {
         weeklyRes,
         monthlyRes,
         bookingsRes,
+        customersRes,
       ] = await Promise.all([
         user?.role === "admin"
           ? fetch(`/api/reports/daily?date=${today}`)
@@ -58,6 +71,7 @@ export default function Dashboard() {
         user?.role === "admin" ? fetch("/api/reports/weekly") : null,
         user?.role === "admin" ? fetch("/api/reports/monthly") : null,
         fetch("/api/bookings?limit=3&upcoming=true"),
+        fetch("/api/customers"),
       ]);
 
       let todayIncome = 0;
@@ -127,6 +141,29 @@ export default function Dashboard() {
         }
       }
 
+      // Get customer count
+      let todayCustomers = 0;
+      if (customersRes && customersRes.ok) {
+        try {
+          const customersData = await customersRes.json();
+          const customers = customersData.customers || customersData || [];
+          // Count customers added today
+          const todayStart = new Date(today).setHours(0, 0, 0, 0);
+          todayCustomers = customers.filter((customer) => {
+            const createdAt = new Date(customer.createdAt).getTime();
+            return createdAt >= todayStart;
+          }).length;
+        } catch (error) {
+          console.error("Error parsing customers data:", error);
+          todayCustomers = 0;
+        }
+      }
+
+      // Calculate total frame stock
+      const totalFrameStock = (
+        Array.isArray(framesData) ? framesData : []
+      ).reduce((total, frame) => total + (frame.quantity || 0), 0);
+
       // Generate some recent activity data (in real app, this would come from API)
       const recentActivity = [
         {
@@ -162,6 +199,8 @@ export default function Dashboard() {
         monthlyStats,
         recentActivity,
         upcomingBookings: upcomingBookings.slice(0, 3),
+        todayCustomers,
+        totalFrameStock,
       });
     } catch (error) {
       console.error("Failed to fetch dashboard data:", error);
@@ -173,6 +212,33 @@ export default function Dashboard() {
   useEffect(() => {
     fetchDashboardData();
   }, [fetchDashboardData]);
+
+  const fetchCustomers = async () => {
+    try {
+      const response = await fetch("/api/customers");
+      if (response.ok) {
+        const data = await response.json();
+        setCustomers(Array.isArray(data) ? data : data.customers || []);
+      }
+    } catch (error) {
+      console.error("Failed to fetch customers:", error);
+    }
+  };
+
+  const handleQuickInvoiceClick = () => {
+    fetchCustomers();
+    setShowQuickInvoiceModal(true);
+  };
+
+  const handleQuickInvoiceSubmit = () => {
+    if (quickInvoiceCustomer) {
+      // Navigate to create invoice page with selected customer
+      router.push(`/invoices/create?customerId=${quickInvoiceCustomer}`);
+    } else {
+      // Navigate to create invoice page without customer
+      router.push("/invoices/create");
+    }
+  };
 
   if (authLoading) {
     return (
@@ -208,6 +274,78 @@ export default function Dashboard() {
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-white">Dashboard</h1>
         <p className="mt-1 text-sm text-gray-300">Welcome back, {user?.name}</p>
+      </div>
+
+      {/* Quick Action Shortcuts - Featured at top */}
+      <div className="mb-8">
+        <h2 className="text-lg font-semibold text-white mb-4">Quick Actions</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {/* Quick Add Invoice */}
+          <button
+            onClick={handleQuickInvoiceClick}
+            className="bg-linear-to-br from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 p-6 rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105 cursor-pointer"
+          >
+            <div className="flex flex-col items-center text-center">
+              <PlusCircleIcon className="h-10 w-10 text-white mb-3" />
+              <span className="text-sm font-medium text-white">
+                New Invoice
+              </span>
+            </div>
+          </button>
+
+          {/* Quick Add Payment */}
+          <Link
+            href="/payments"
+            className="bg-linear-to-br from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 p-6 rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105 cursor-pointer"
+          >
+            <div className="flex flex-col items-center text-center">
+              <BanknotesIcon className="h-10 w-10 text-white mb-3" />
+              <span className="text-sm font-medium text-white">
+                Add Payment
+              </span>
+            </div>
+          </Link>
+
+          {/* Quick Add Customer - Admin only / View Customers for Staff */}
+          {isAdmin ? (
+            <Link
+              href="/customers"
+              className="bg-linear-to-br from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 p-6 rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105 cursor-pointer"
+            >
+              <div className="flex flex-col items-center text-center">
+                <UserPlusIcon className="h-10 w-10 text-white mb-3" />
+                <span className="text-sm font-medium text-white">
+                  Manage Customers
+                </span>
+              </div>
+            </Link>
+          ) : (
+            <Link
+              href="/invoices"
+              className="bg-linear-to-br from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 p-6 rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105 cursor-pointer"
+            >
+              <div className="flex flex-col items-center text-center">
+                <DocumentTextIcon className="h-10 w-10 text-white mb-3" />
+                <span className="text-sm font-medium text-white">
+                  View Invoices
+                </span>
+              </div>
+            </Link>
+          )}
+
+          {/* Quick Add Booking */}
+          <Link
+            href="/bookings"
+            className="bg-linear-to-br from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 p-6 rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105 cursor-pointer"
+          >
+            <div className="flex flex-col items-center text-center">
+              <CalendarIcon className="h-10 w-10 text-white mb-3" />
+              <span className="text-sm font-medium text-white">
+                New Booking
+              </span>
+            </div>
+          </Link>
+        </div>
       </div>
 
       {/* Stats Grid */}
@@ -307,7 +445,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Quick Actions */}
+        {/* Frame Stock */}
         <div className="bg-gray-800 overflow-hidden shadow rounded-lg">
           <div className="p-5">
             <div className="flex items-center">
@@ -317,10 +455,10 @@ export default function Dashboard() {
               <div className="ml-5 w-0 flex-1">
                 <dl>
                   <dt className="text-sm font-medium text-gray-400 truncate">
-                    Quick Actions
+                    Total Frame Stock
                   </dt>
                   <dd className="text-lg font-medium text-white">
-                    Create Invoice
+                    {dashboardData.totalFrameStock} units
                   </dd>
                 </dl>
               </div>
@@ -329,10 +467,125 @@ export default function Dashboard() {
           <div className="bg-gray-700 px-5 py-3">
             <div className="text-sm">
               <Link
-                href="/invoices/create"
+                href="/frames"
                 className="font-medium text-indigo-400 hover:text-indigo-300 cursor-pointer transition-colors duration-200"
               >
-                Get started
+                Manage stock
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Today's Customers */}
+        <div className="bg-gray-800 overflow-hidden shadow rounded-lg">
+          <div className="p-5">
+            <div className="flex items-center">
+              <div className="shrink-0">
+                <UserGroupIcon className="h-6 w-6 text-gray-300" />
+              </div>
+              <div className="ml-5 w-0 flex-1">
+                <dl>
+                  <dt className="text-sm font-medium text-gray-400 truncate">
+                    Today&apos;s Customers
+                  </dt>
+                  <dd className="text-lg font-medium text-white">
+                    {dashboardData.todayCustomers}
+                  </dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+          <div className="bg-gray-700 px-5 py-3">
+            <div className="text-sm">
+              <Link
+                href="/customers"
+                className="font-medium text-indigo-400 hover:text-indigo-300 cursor-pointer transition-colors duration-200"
+              >
+                View all
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Upcoming Bookings Section - For All Users */}
+      <div className="mb-8">
+        <div className="bg-gray-800 shadow rounded-lg">
+          <div className="px-4 py-5 sm:p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg leading-6 font-medium text-white">
+                Upcoming Bookings
+              </h3>
+              <CalendarDaysIcon className="h-6 w-6 text-gray-300" />
+            </div>
+
+            <div className="space-y-3">
+              {dashboardData.upcomingBookings.length > 0 ? (
+                dashboardData.upcomingBookings.map((booking, index) => (
+                  <div
+                    key={booking._id || index}
+                    className="flex items-center justify-between p-4 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors duration-200"
+                  >
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-2">
+                        <p className="text-sm font-semibold text-white">
+                          {booking.customerName || `Client ${index + 1}`}
+                        </p>
+                        <span
+                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                            booking.status === "scheduled"
+                              ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+                              : booking.status === "completed"
+                              ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                              : "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200"
+                          }`}
+                        >
+                          {booking.status || "Scheduled"}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-300 mb-1">
+                        <span className="font-medium">Service:</span>{" "}
+                        {booking.service || "Photography Session"}
+                      </p>
+                      <p className="text-sm text-gray-400">
+                        <span className="font-medium">Date:</span>{" "}
+                        {booking.date
+                          ? new Date(booking.date).toLocaleDateString("en-US", {
+                              weekday: "short",
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                            })
+                          : "Not set"}
+                      </p>
+                      {booking.notes && (
+                        <p className="text-xs text-gray-500 mt-1">
+                          {booking.notes}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-8">
+                  <CalendarDaysIcon className="h-12 w-12 text-gray-500 mx-auto mb-3" />
+                  <p className="text-sm text-gray-400">No upcoming bookings</p>
+                  <Link
+                    href="/bookings"
+                    className="mt-2 inline-block text-sm font-medium text-indigo-400 hover:text-indigo-300"
+                  >
+                    Schedule a booking →
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            <div className="mt-4 pt-4 border-t border-gray-600">
+              <Link
+                href="/bookings"
+                className="text-sm font-medium text-indigo-400 hover:text-indigo-300 cursor-pointer transition-colors duration-200"
+              >
+                View all bookings →
               </Link>
             </div>
           </div>
@@ -787,6 +1040,65 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+
+      {/* Quick Invoice Modal */}
+      {showQuickInvoiceModal && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center">
+          <div className="relative bg-gray-800 rounded-lg shadow-xl max-w-md w-full mx-4">
+            <div className="flex items-center justify-between p-6 border-b border-gray-700">
+              <h3 className="text-xl font-semibold text-white">
+                Quick Create Invoice
+              </h3>
+              <button
+                onClick={() => setShowQuickInvoiceModal(false)}
+                className="text-gray-400 hover:text-white"
+              >
+                <XMarkIcon className="h-6 w-6" />
+              </button>
+            </div>
+
+            <div className="p-6">
+              <p className="text-sm text-gray-300 mb-4">
+                Select a customer to create an invoice, or continue without a
+                customer to add one later.
+              </p>
+
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Customer (Optional)
+                </label>
+                <select
+                  value={quickInvoiceCustomer}
+                  onChange={(e) => setQuickInvoiceCustomer(e.target.value)}
+                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  <option value="">-- Select Customer or Skip --</option>
+                  {customers.map((customer) => (
+                    <option key={customer._id} value={customer._id}>
+                      {customer.name} - {customer.mobile}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowQuickInvoiceModal(false)}
+                  className="flex-1 px-4 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-600 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleQuickInvoiceSubmit}
+                  className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors font-medium"
+                >
+                  Continue
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </Layout>
   );
 }

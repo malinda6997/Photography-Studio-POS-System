@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../../components/AuthProvider";
 import { useToast } from "../../../components/ui/toast";
 import Layout from "../../components/Layout";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   PlusIcon,
   TrashIcon,
@@ -17,6 +17,7 @@ import {
 export default function CreateInvoicePage() {
   const { user } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const toast = useToast();
 
   // Data states
@@ -69,7 +70,14 @@ export default function CreateInvoicePage() {
     fetchCustomers();
     fetchCategories();
     fetchFrames();
-  }, []);
+
+    // Check if customerId is passed from dashboard
+    const customerId = searchParams.get("customerId");
+    if (customerId) {
+      // Pre-select the customer
+      setInvoiceData((prev) => ({ ...prev, customerId }));
+    }
+  }, [searchParams]);
 
   const fetchCustomers = async () => {
     try {
@@ -79,6 +87,16 @@ export default function CreateInvoicePage() {
       if (response.ok) {
         const data = await response.json();
         setCustomers(data);
+
+        // If customerId is in URL, auto-select that customer
+        const customerId = searchParams.get("customerId");
+        if (customerId) {
+          const customer = data.find((c) => c._id === customerId);
+          if (customer) {
+            setSelectedCustomer(customer);
+            setMobileSearch(customer.mobile);
+          }
+        }
       }
     } catch (error) {
       console.error("Failed to fetch customers:", error);

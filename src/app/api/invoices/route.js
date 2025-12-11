@@ -9,7 +9,7 @@ import {
   generateInvoiceNumber,
   calculatePaymentStatus,
 } from "../../../../lib/server-utils";
-import { requireAuth } from "../../../../lib/auth";
+import { requireAuth } from "../../../lib/auth";
 
 export async function GET(request) {
   console.log("📋 GET /api/invoices - Request received");
@@ -212,7 +212,7 @@ export async function POST(request) {
         balanceDue: parseFloat(balanceDue.toFixed(2)),
         totalPaid: parseFloat(actualAdvancePaid.toFixed(2)),
         paymentStatus,
-        createdBy: user._id,
+        createdBy: user.id,
         notes: notes || "",
         metadata: {
           hasDiscounts: totalDiscount > 0,

@@ -17,6 +17,7 @@
     "jose": "^6.1.2",
     "jsonwebtoken": "^9.0.2",
     "jspdf": "^3.0.4",
+    "jspdf-autotable": "^5.0.2",
     "lucide-react": "^0.555.0",
     "mongodb": "^7.0.0",
     "mongoose": "^9.0.0",

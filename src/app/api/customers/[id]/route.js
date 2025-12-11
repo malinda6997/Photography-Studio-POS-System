@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import dbConnect from "../../../../../lib/dbConnect";
 import Customer from "../../../../../models/Customer";
-import { requireAuth, requireAdmin } from "../../../../../lib/auth";
+import { requireAuth, requireAdmin } from "../../../../lib/auth";
 
 export async function GET(request, { params }) {
   const user = await requireAuth(request);

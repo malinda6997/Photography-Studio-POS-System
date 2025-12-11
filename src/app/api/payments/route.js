@@ -8,7 +8,7 @@ import {
   generateReceiptNumber,
   calculatePaymentStatus,
 } from "../../../../lib/server-utils";
-import { requireAuth } from "../../../../lib/auth";
+import { requireAuth } from "../../../lib/auth";
 
 export async function GET(request) {
   const user = await requireAuth(request);
@@ -134,4 +134,3 @@ export async function POST(request) {
     await session_db.endSession();
   }
 }
-

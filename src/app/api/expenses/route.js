@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import dbConnect from "../../../../lib/dbConnect";
 import Expense from "../../../../models/Expense";
-import { requireAuth } from "../../../../lib/auth";
+import { requireAuth } from "../../../lib/auth";
 
 export async function GET(request) {
   const user = await requireAuth(request);
@@ -87,7 +87,7 @@ export async function POST(request) {
       amount,
       category,
       note,
-      createdBy: user._id,
+      createdBy: user.id,
     });
 
     await expense.save();
@@ -104,4 +104,3 @@ export async function POST(request) {
     );
   }
 }
-
