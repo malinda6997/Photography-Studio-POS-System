@@ -54,12 +54,16 @@ export async function POST(request) {
       },
     });
 
+    // Set cookie with explicit path
     response.cookies.set("auth-token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
+      path: "/",
       maxAge: 86400, // 24 hours
     });
+
+    console.log("🍪 Cookie set for user:", user.username, "Token length:", token.length);
 
     return response;
   } catch (error) {

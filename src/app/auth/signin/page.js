@@ -35,9 +35,11 @@ export default function SignIn() {
       if (response.ok) {
         const data = await response.json();
         console.log("✅ Login successful:", data);
+        console.log("🍪 Cookies after login:", document.cookie);
         toast.success(`Welcome ${data.user.name}! Redirecting...`);
 
         setTimeout(() => {
+          console.log("🔄 Redirecting to dashboard...");
           window.location.href = "/dashboard";
         }, 1500);
       } else {
