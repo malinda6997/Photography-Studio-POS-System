@@ -38,7 +38,7 @@ export default function SignIn() {
         console.log("✅ Login successful:", data);
         console.log("🍪 Cookies after login:", document.cookie);
         console.log("🔑 Token received:", data.token ? "Yes" : "No");
-        
+
         toast.success(`Welcome ${data.user.name}! Redirecting...`);
 
         // Verify session is set before redirecting
@@ -49,7 +49,7 @@ export default function SignIn() {
               credentials: "include",
             });
             console.log("🔐 Session check status:", sessionCheck.status);
-            
+
             const sessionData = await sessionCheck.json();
             console.log("📦 Session data:", sessionData);
 
@@ -57,7 +57,9 @@ export default function SignIn() {
               console.log("✅ Session verified, redirecting to dashboard...");
               window.location.href = "/dashboard";
             } else {
-              console.log("❌ Session verification failed - redirecting anyway");
+              console.log(
+                "❌ Session verification failed - redirecting anyway"
+              );
               // Force redirect even if session check fails
               window.location.href = "/dashboard";
             }
