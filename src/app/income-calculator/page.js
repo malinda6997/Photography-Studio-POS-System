@@ -119,11 +119,15 @@ export default function IncomeCalculatorPage() {
       if (invoicesRes.ok) {
         const data = await invoicesRes.json();
         console.log("📊 Invoices data:", data);
-        const invoices = data.invoices || data || [];
+        let invoices = data.invoices || data || [];
         console.log("📊 Invoices array:", invoices);
         console.log("📊 Invoices count:", invoices.length);
 
-        // Calculate total income from all invoices (finalTotal is the invoice amount)
+        // Filter invoices by date period
+        invoices = filterByDate(invoices, "date");
+        console.log("📊 Filtered invoices count:", invoices.length);
+
+        // Calculate total income from filtered invoices
         totalSystemIncome = invoices.reduce((sum, invoice) => {
           console.log(`Invoice ${invoice.invoiceNo}: ${invoice.finalTotal}`);
           return sum + (Number(invoice.finalTotal) || 0);
@@ -136,9 +140,14 @@ export default function IncomeCalculatorPage() {
       if (expensesRes.ok) {
         const data = await expensesRes.json();
         console.log("💰 Expenses data:", data);
-        const expenses = data.expenses || data || [];
+        let expenses = data.expenses || data || [];
         console.log("💰 Expenses array:", expenses);
         console.log("💰 Expenses count:", expenses.length);
+
+        // Filter expenses by date period
+        expenses = filterByDate(expenses, "date");
+        console.log("💰 Filtered expenses count:", expenses.length);
+
         totalSystemExpenses = expenses.reduce((sum, expense) => {
           console.log(`Expense ${expense.description}: ${expense.amount}`);
           return sum + (Number(expense.amount) || 0);
@@ -313,20 +322,17 @@ export default function IncomeCalculatorPage() {
 
   const generateReport = async () => {
     try {
-      // Dynamically import jsPDF to avoid SSR issues
+      // Dynamically import jsPDF
       const { default: jsPDF } = await import("jspdf");
-      await import("jspdf-autotable");
 
       const doc = new jsPDF();
       const pageWidth = doc.internal.pageSize.getWidth();
+      let yPos = 20;
 
-      // Filter data based on selected period
-      const filteredInvoices =
-        filterPeriod === "all" ? customIncomes : filterByDate(customIncomes);
-      const filteredExpenses =
-        filterPeriod === "all" ? customExpenses : filterByDate(customExpenses);
+      // Calculate filtered data for the report
+      const filteredInvoices = filterByDate(customIncomes);
+      const filteredExpenses = filterByDate(customExpenses);
 
-      // Calculate filtered totals
       const filteredCustomIncomesTotal = filteredInvoices.reduce(
         (sum, income) => sum + income.amount,
         0
@@ -335,6 +341,10 @@ export default function IncomeCalculatorPage() {
         (sum, expense) => sum + expense.amount,
         0
       );
+
+      const reportTotalIncome = systemIncome + filteredCustomIncomesTotal;
+      const reportTotalExpenses = systemExpenses + filteredCustomExpensesTotal;
+      const reportNetProfit = reportTotalIncome - reportTotalExpenses;
 
       // Get period label
       let periodLabel = "All Time";
@@ -349,222 +359,211 @@ export default function IncomeCalculatorPage() {
       });
       const reportTime = new Date().toLocaleTimeString("en-US");
 
-      // Header
+      // Header with background
       doc.setFillColor(79, 70, 229);
       doc.rect(0, 0, pageWidth, 40, "F");
 
       doc.setTextColor(255, 255, 255);
-      doc.setFontSize(22);
+      doc.setFontSize(24);
       doc.setFont(undefined, "bold");
       doc.text("Income Calculator Report", pageWidth / 2, 15, {
         align: "center",
       });
 
-      doc.setFontSize(10);
+      doc.setFontSize(11);
       doc.setFont(undefined, "normal");
-      doc.text("Shine Art Studio - POS System", pageWidth / 2, 22, {
+      doc.text("Shine Art Studio - POS System", pageWidth / 2, 23, {
         align: "center",
       });
-      doc.text(`Generated: ${reportDate} at ${reportTime}`, pageWidth / 2, 28, {
+      doc.setFontSize(9);
+      doc.text(`Generated: ${reportDate} at ${reportTime}`, pageWidth / 2, 29, {
         align: "center",
       });
       doc.text(
         `Report by: ${user?.name || "Admin"} | Period: ${periodLabel}`,
         pageWidth / 2,
-        34,
+        35,
         { align: "center" }
       );
 
-      let yPos = 50;
+      yPos = 50;
 
-      // Summary Cards
+      // Summary Section
       doc.setTextColor(0, 0, 0);
-      doc.setFontSize(14);
+      doc.setFontSize(16);
       doc.setFont(undefined, "bold");
       doc.text("Financial Summary", 14, yPos);
       yPos += 10;
 
-      // Income Box
+      // Total Income
       doc.setFillColor(240, 253, 244);
       doc.setDrawColor(16, 185, 129);
-      doc.roundedRect(14, yPos, 60, 25, 3, 3, "FD");
+      doc.setLineWidth(0.5);
+      doc.rect(14, yPos, 180, 15, "FD");
       doc.setTextColor(16, 185, 129);
-      doc.setFontSize(10);
-      doc.text("Total Income", 17, yPos + 6);
-      doc.setFontSize(14);
+      doc.setFontSize(12);
       doc.setFont(undefined, "bold");
-      doc.text(`LKR ${totalIncome.toLocaleString()}`, 17, yPos + 13);
-      doc.setFontSize(8);
+      doc.text("Total Income", 18, yPos + 6);
+      doc.setFontSize(14);
+      doc.text(`LKR ${reportTotalIncome.toLocaleString()}`, 18, yPos + 11);
+      doc.setFontSize(9);
       doc.setFont(undefined, "normal");
-      doc.text(`Invoices: ${systemIncome.toLocaleString()}`, 17, yPos + 18);
       doc.text(
-        `Other: ${filteredCustomIncomesTotal.toLocaleString()}`,
-        17,
-        yPos + 22
+        `Invoices: LKR ${systemIncome.toLocaleString()} | Other: LKR ${filteredCustomIncomesTotal.toLocaleString()}`,
+        100,
+        yPos + 9
       );
+      yPos += 20;
 
-      // Expenses Box
+      // Total Expenses
       doc.setFillColor(254, 242, 242);
       doc.setDrawColor(239, 68, 68);
-      doc.roundedRect(78, yPos, 60, 25, 3, 3, "FD");
+      doc.rect(14, yPos, 180, 15, "FD");
       doc.setTextColor(239, 68, 68);
-      doc.setFontSize(10);
-      doc.text("Total Expenses", 81, yPos + 6);
-      doc.setFontSize(14);
-      doc.setFont(undefined, "bold");
-      doc.text(`LKR ${totalExpenses.toLocaleString()}`, 81, yPos + 13);
-      doc.setFontSize(8);
-      doc.setFont(undefined, "normal");
-      doc.text(`Business: ${systemExpenses.toLocaleString()}`, 81, yPos + 18);
-      doc.text(
-        `Other: ${filteredCustomExpensesTotal.toLocaleString()}`,
-        81,
-        yPos + 22
-      );
-
-      // Net Profit Box
-      const netProfit = totalIncome - totalExpenses;
-      if (netProfit >= 0) {
-        doc.setFillColor(239, 246, 255);
-        doc.setDrawColor(59, 130, 246);
-      } else {
-        doc.setFillColor(255, 251, 235);
-        doc.setDrawColor(245, 158, 11);
-      }
-      doc.roundedRect(142, yPos, 60, 25, 3, 3, "FD");
-
-      if (netProfit >= 0) {
-        doc.setTextColor(59, 130, 246);
-      } else {
-        doc.setTextColor(245, 158, 11);
-      }
-      doc.setFontSize(10);
-      doc.text(netProfit >= 0 ? "Net Profit" : "Net Loss", 145, yPos + 6);
-      doc.setFontSize(14);
-      doc.setFont(undefined, "bold");
-      doc.text(`LKR ${netProfit.toLocaleString()}`, 145, yPos + 13);
-      doc.setFontSize(8);
-      doc.setFont(undefined, "normal");
-      doc.text("Income - Expenses", 145, yPos + 18);
-
-      yPos += 35;
-
-      // Income Details Table
-      doc.setTextColor(0, 0, 0);
       doc.setFontSize(12);
+      doc.setFont(undefined, "bold");
+      doc.text("Total Expenses", 18, yPos + 6);
+      doc.setFontSize(14);
+      doc.text(`LKR ${reportTotalExpenses.toLocaleString()}`, 18, yPos + 11);
+      doc.setFontSize(9);
+      doc.setFont(undefined, "normal");
+      doc.text(
+        `Business: LKR ${systemExpenses.toLocaleString()} | Other: LKR ${filteredCustomExpensesTotal.toLocaleString()}`,
+        100,
+        yPos + 9
+      );
+      yPos += 20;
+
+      // Net Profit/Loss
+      const isProfit = reportNetProfit >= 0;
+      doc.setFillColor(
+        isProfit ? 239 : 255,
+        isProfit ? 246 : 251,
+        isProfit ? 255 : 235
+      );
+      doc.setDrawColor(
+        isProfit ? 59 : 245,
+        isProfit ? 130 : 158,
+        isProfit ? 246 : 11
+      );
+      doc.rect(14, yPos, 180, 15, "FD");
+      doc.setTextColor(
+        isProfit ? 59 : 245,
+        isProfit ? 130 : 158,
+        isProfit ? 246 : 11
+      );
+      doc.setFontSize(12);
+      doc.setFont(undefined, "bold");
+      doc.text(isProfit ? "Net Profit" : "Net Loss", 18, yPos + 6);
+      doc.setFontSize(14);
+      doc.text(`LKR ${reportNetProfit.toLocaleString()}`, 18, yPos + 11);
+      doc.setFontSize(9);
+      doc.setFont(undefined, "normal");
+      doc.text("Income - Expenses", 100, yPos + 9);
+      yPos += 25;
+
+      // Income Details
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(14);
       doc.setFont(undefined, "bold");
       doc.text("Income Details", 14, yPos);
-      yPos += 5;
+      yPos += 8;
 
-      const incomeData = [
-        ["Category", "Amount (LKR)"],
-        ["Business Invoices", systemIncome.toLocaleString()],
-      ];
+      doc.setFontSize(10);
+      doc.setFont(undefined, "normal");
+      doc.text("Business Invoices", 18, yPos);
+      doc.text(`LKR ${systemIncome.toLocaleString()}`, 180, yPos, {
+        align: "right",
+      });
+      yPos += 6;
 
       filteredInvoices.forEach((income) => {
+        if (yPos > 270) {
+          doc.addPage();
+          yPos = 20;
+        }
         const incomeDate = new Date(income.date).toLocaleDateString();
-        incomeData.push([
-          `${income.description} (${incomeDate})`,
-          income.amount.toLocaleString(),
-        ]);
+        doc.text(`${income.description} (${incomeDate})`, 18, yPos);
+        doc.text(`LKR ${income.amount.toLocaleString()}`, 180, yPos, {
+          align: "right",
+        });
+        yPos += 6;
       });
 
-      incomeData.push([
-        "TOTAL INCOME",
-        {
-          content: `LKR ${totalIncome.toLocaleString()}`,
-          styles: { fontStyle: "bold", fillColor: [240, 253, 244] },
-        },
-      ]);
-
-      doc.autoTable({
-        startY: yPos,
-        head: [incomeData[0]],
-        body: incomeData.slice(1),
-        theme: "grid",
-        headStyles: { fillColor: [79, 70, 229], textColor: 255 },
-        styles: { fontSize: 9 },
-        columnStyles: {
-          1: { halign: "right" },
-        },
-      });
-
-      yPos = doc.lastAutoTable.finalY + 10;
-
-      // Expense Details Table
-      doc.setFontSize(12);
+      yPos += 2;
       doc.setFont(undefined, "bold");
-      doc.text("Expense Details", 14, yPos);
-      yPos += 5;
+      doc.text("TOTAL INCOME", 18, yPos);
+      doc.text(`LKR ${reportTotalIncome.toLocaleString()}`, 180, yPos, {
+        align: "right",
+      });
+      yPos += 10;
 
-      const expenseData = [
-        ["Category", "Amount (LKR)"],
-        ["Business Expenses", systemExpenses.toLocaleString()],
-      ];
+      // Expense Details
+      if (yPos > 250) {
+        doc.addPage();
+        yPos = 20;
+      }
+
+      doc.setFontSize(14);
+      doc.text("Expense Details", 14, yPos);
+      yPos += 8;
+
+      doc.setFontSize(10);
+      doc.setFont(undefined, "normal");
+      doc.text("Business Expenses", 18, yPos);
+      doc.text(`LKR ${systemExpenses.toLocaleString()}`, 180, yPos, {
+        align: "right",
+      });
+      yPos += 6;
 
       filteredExpenses.forEach((expense) => {
+        if (yPos > 270) {
+          doc.addPage();
+          yPos = 20;
+        }
         const expenseDate = new Date(expense.date).toLocaleDateString();
-        expenseData.push([
-          `${expense.description} (${expenseDate})`,
-          expense.amount.toLocaleString(),
-        ]);
+        doc.text(`${expense.description} (${expenseDate})`, 18, yPos);
+        doc.text(`LKR ${expense.amount.toLocaleString()}`, 180, yPos, {
+          align: "right",
+        });
+        yPos += 6;
       });
 
-      expenseData.push([
-        "TOTAL EXPENSES",
-        {
-          content: `LKR ${totalExpenses.toLocaleString()}`,
-          styles: { fontStyle: "bold", fillColor: [254, 242, 242] },
-        },
-      ]);
-
-      doc.autoTable({
-        startY: yPos,
-        head: [expenseData[0]],
-        body: expenseData.slice(1),
-        theme: "grid",
-        headStyles: { fillColor: [79, 70, 229], textColor: 255 },
-        styles: { fontSize: 9 },
-        columnStyles: {
-          1: { halign: "right" },
-        },
+      yPos += 2;
+      doc.setFont(undefined, "bold");
+      doc.text("TOTAL EXPENSES", 18, yPos);
+      doc.text(`LKR ${reportTotalExpenses.toLocaleString()}`, 180, yPos, {
+        align: "right",
       });
 
-      // Footer
+      // Footer on all pages
       const pageCount = doc.internal.getNumberOfPages();
       for (let i = 1; i <= pageCount; i++) {
         doc.setPage(i);
         doc.setFontSize(8);
+        doc.setFont(undefined, "normal");
         doc.setTextColor(128, 128, 128);
         doc.text(
-          `Page ${i} of ${pageCount}`,
+          `Page ${i} of ${pageCount} - Generated by Shine Art Studio POS System`,
           pageWidth / 2,
           doc.internal.pageSize.getHeight() - 10,
-          { align: "center" }
-        );
-        doc.text(
-          "This report was automatically generated by Shine Art Studio POS System",
-          pageWidth / 2,
-          doc.internal.pageSize.getHeight() - 5,
           { align: "center" }
         );
       }
 
       // Save the PDF
       const filename = `Income_Calculator_Report_${periodLabel.replace(
-        " ",
+        /\s+/g,
         "_"
       )}_${new Date().toISOString().split("T")[0]}.pdf`;
       doc.save(filename);
 
-      toast.success("PDF report generated successfully!");
+      toast.success("PDF report downloaded successfully!");
     } catch (error) {
       console.error("Failed to generate PDF:", error);
-      toast.error("Failed to generate PDF report");
+      toast.error(`Failed to generate PDF report: ${error.message}`);
     }
   };
-
-  // Calculate totals
 
   // Calculate totals with date filtering
   const filteredCustomIncomes = filterByDate(customIncomes);
