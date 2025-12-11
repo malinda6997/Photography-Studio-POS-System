@@ -27,6 +27,7 @@ export default function SignIn() {
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include", // Ensure cookies are included
         body: JSON.stringify({ username, password }),
       });
 
@@ -38,10 +39,28 @@ export default function SignIn() {
         console.log("🍪 Cookies after login:", document.cookie);
         toast.success(`Welcome ${data.user.name}! Redirecting...`);
 
-        setTimeout(() => {
-          console.log("🔄 Redirecting to dashboard...");
-          window.location.href = "/dashboard";
-        }, 1500);
+        // Verify session is set before redirecting
+        setTimeout(async () => {
+          console.log("🔄 Verifying session...");
+          try {
+            const sessionCheck = await fetch("/api/auth/session", {
+              credentials: "include",
+            });
+            console.log("🔐 Session check status:", sessionCheck.status);
+
+            if (sessionCheck.ok) {
+              console.log("✅ Session verified, redirecting to dashboard...");
+              window.location.href = "/dashboard";
+            } else {
+              console.log("❌ Session verification failed");
+              toast.error("Session error. Please try logging in again.");
+            }
+          } catch (err) {
+            console.error("Session check error:", err);
+            // Try redirect anyway
+            window.location.href = "/dashboard";
+          }
+        }, 1000);
       } else {
         const errorData = await response.json();
         console.log("❌ Login failed:", errorData);
